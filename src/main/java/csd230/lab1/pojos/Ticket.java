@@ -2,16 +2,10 @@ package csd230.lab1.pojos;
 
 public class Ticket extends Product {
     public String description = "";
-    public double price = 0.0;
 
     @Override
     public void sellItem() {
-        System.out.println("Selling Ticket: " + description + " for " + price);
-    }
-
-    @Override
-    public double getPrice() {
-        return price;
+        System.out.println("Selling Ticket: " + description + " for " + getPrice());
     }
 
     @Override
@@ -20,7 +14,7 @@ public class Ticket extends Product {
         this.description = getInput("Ticket");
 
         System.out.println("Enter Price:");
-        this.price = getInput(0.0);
+        setPrice(getInput(0.0));
     }
 
     @Override
@@ -28,12 +22,12 @@ public class Ticket extends Product {
         System.out.println("Edit Description [" + this.description + "]:");
         this.description = getInput(this.description);
 
-        System.out.println("Edit Price [" + this.price + "]:");
-        this.price = getInput(this.price);
+        System.out.println("Edit Price [" + getPrice() + "]:");
+        setPrice(getInput(getPrice()));
     }
 
     @Override
     public String toString() {
-        return "Ticket{desc='" + description + "', price=" + price + "}";
+        return "Ticket{desc='" + description + "', price=" + getPrice() + "}";
     }
 }

@@ -1,5 +1,4 @@
 classDiagram
-    Editable <|--Product
     Product <|--Ticket
     Product <|--Publication
     Publication <|-- Book
@@ -7,10 +6,14 @@ classDiagram
     Magazine <|-- DiscMag
     SaleableItem <|.. Product
     Serializable <|.. Product
-    Product <-- CashTill
+    Cart "0..*" --> "0..*" Product : contains
 
     class Product{
         -String productId
+        -Long id
+        +double price
+
+        +getPrice()
     }
 
     class Serializable{
@@ -18,28 +21,13 @@ classDiagram
     }
     class Ticket{
         +description
-        +price
-        +sellItem()
-    }
-    class Editable{
-        <<abstract>>
-        -Scanner input
-        +String getInput(String)
-        +int getInput(int)
-        +double getInput(double)
-        +boolean getInput(boolean)
-        +Date getInput(Date)
-        +Enum getInput(Enum)
-        +edit()*
-        +initialize()*
 
+        +sellItem()
     }
     class Publication{
         <<Abstract>>
         -String title
-        -double price
         -int copies
-        +getPrice()
 
         +Publication()
         +Publication(String title, double price, int copies)
@@ -49,10 +37,9 @@ classDiagram
 
     }
     class Book{
-        -String author
-        +edit()
-        +initialize()
-        +sellItem()
+         -String isbn
+         -String author
+
 
         +Book()
         +Book(String author)
@@ -69,29 +56,26 @@ classDiagram
         +Magazine()
         +Magazine(int orderQty, Date currentIssue, String title, double price, int copies)
 
-        +edit()
-        +initialize()
-        +sellItem()
     }
     class DiscMag{
         -boolean hasDisc
-        +edit()
-        +initialize()
-        +sellItem()
 
         +DiscMag()
         +DiscMag(boolean, hasDisc, int orderQty, Date currentIssue, String title, double price, int copies)
 
     }
-    class CashTill{
-        -double runningTotal
-        +CashTill()
-        +showTotal()
-        +sellItem(SaleableItem item)
-    }
+
     class SaleableItem {
         <<interface>>
         +sellItem()
         +getPrice()
 
+    }
+
+    class Cart{
+        -Long id
+        -List items
+        +addItem(Product item)
+        +getItems()
+        +setItems(List items)
     }

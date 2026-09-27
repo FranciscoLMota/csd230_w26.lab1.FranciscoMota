@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public abstract class Publication extends Product {
     private String title = "";
-    private double price = 0.0;
     private int copies = 0;
 
     public Publication() {
@@ -12,7 +11,7 @@ public abstract class Publication extends Product {
 
     public Publication(String title, double price, int copies) {
         this.title = title;
-        this.price = price;
+        setPrice(price);
         this.copies = copies;
     }
 
@@ -28,7 +27,7 @@ public abstract class Publication extends Product {
         this.copies = getInput(0);
 
         System.out.println("Enter price:");
-        this.price = getInput(0.0);
+        setPrice(getInput(0.0));
     }
 
     @Override
@@ -36,20 +35,11 @@ public abstract class Publication extends Product {
         System.out.println("Edit Title [" + this.title + "]:");
         this.title = getInput(this.title);
 
-        System.out.println("Edit Price [" + this.price + "]:");
-        this.price = getInput(this.price);
+        System.out.println("Edit Price [" + getPrice() + "]:");
+        setPrice(getInput(getPrice()));
 
         System.out.println("Edit Copies [" + this.copies + "]:");
         this.copies = getInput(this.copies);
-    }
-
-    @Override
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public String getTitle() {
@@ -70,7 +60,7 @@ public abstract class Publication extends Product {
 
     @Override
     public String toString() {
-        return "Publication{title='" + title + "', price=" + price + ", copies=" + copies + "}";
+        return "Publication{title='" + title + "', price=" + getPrice() + ", copies=" + copies + "}";
     }
 
     @Override
@@ -78,13 +68,13 @@ public abstract class Publication extends Product {
         if (this == o) return true;
         if (!(o instanceof Publication)) return false;
         Publication that = (Publication) o;
-        return Double.compare(that.price, price) == 0 &&
+        return Double.compare(that.getPrice(), getPrice()) == 0 &&
                 copies == that.copies &&
                 Objects.equals(title, that.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, price, copies);
+        return Objects.hash(title, getPrice(), copies);
     }
 }
