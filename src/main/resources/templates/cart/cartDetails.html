@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shopping Cart</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="min-h-screen bg-zinc-950 text-zinc-100">
+
+<main class="mx-auto max-w-6xl px-6 py-12">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold tracking-tight">
+            Your Shopping Cart
+        </h1>
+        <p class="mt-1 text-sm text-zinc-400">
+            Review the items currently in your cart.
+        </p>
+    </div>
+
+    <div th:if="${param.checkoutError != null}"
+         class="mb-6 border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-white">
+        <span th:if="${param.checkoutError[0] == 'emptyCart'}">
+            Your cart is empty. Add an item before checking out.
+        </span>
+        <span th:if="${param.checkoutError[0] == 'outOfStock'}">
+            One or more items are out of stock. Your order was not placed.
+        </span>
+    </div>
+
+    <div th:if="${cart.products.empty}"
+         class="border border-zinc-800 bg-zinc-900 px-6 py-8 text-center">
+
+        <p class="text-zinc-400">
+            Your cart is empty.
+        </p>
+
+    </div>
+
+    <div th:unless="${cart.products.empty}"
+         class="overflow-hidden border border-zinc-800 bg-zinc-900">
+
+        <table class="w-full text-left">
+
+            <thead class="border-b border-zinc-800 bg-zinc-900">
+            <tr class="text-sm text-zinc-400">
+                <th class="px-6 py-4 font-medium">Item Name / Description</th>
+                <th class="px-6 py-4 font-medium">Type</th>
+                <th class="px-6 py-4 font-medium">Price</th>
+                <th class="px-6 py-4 text-right font-medium">Action</th>
+            </tr>
+            </thead>
+
+            <tbody class="divide-y divide-zinc-800">
+
+            <tr th:each="product : ${cart.products}"
+                class="transition hover:bg-zinc-800/50">
+
+                <td class="px-6 py-4 font-medium text-zinc-100">
+
+                    <span th:if="${product instanceof T(csd230.lab1.entities.PublicationEntity)}"
+                          th:text="${product.title}">
+                    </span>
+
+                    <span th:if="${product instanceof T(csd230.lab1.entities.TicketEntity)}"
+                          th:text="${product.description}">
+                    </span>
+
+                </td>
+
+                <td class="px-6 py-4 text-zinc-300"
+                    th:text="${product.productType}">
+                </td>
+
+                <td class="px-6 py-4 text-zinc-300"
+                    th:text="${product.price}">
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                    <a th:href="@{/cart/remove/{id}(id=${product.id})}"
+                       class="border border-red-500/40 px-3 py-1.5 text-sm
+                              text-red-400 transition hover:bg-red-500/10">
+                        Remove
+                    </a>
+                </td>
+
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="mt-6 flex items-center gap-3">
+        <a th:href="@{/books}"
+           class="inline-block bg-indigo-600 px-4 py-2 text-sm font-semibold
+                  text-white transition hover:bg-indigo-500">
+            Continue Shopping
+        </a>
+
+        <form th:unless="${cart.products.empty}"
+              th:action="@{/cart/checkout}"
+              method="post">
+            <button type="submit"
+                    class="bg-emerald-600 px-4 py-2 text-sm font-semibold
+                           text-white transition hover:bg-emerald-500">
+                Checkout
+            </button>
+        </form>
+    </div>
+
+</main>
+
+</body>
+</html>

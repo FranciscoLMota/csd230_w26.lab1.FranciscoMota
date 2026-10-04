@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Confirmation</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="min-h-screen bg-zinc-950 text-zinc-100">
+
+<main class="mx-auto max-w-4xl px-6 py-12">
+    <div class="mb-8">
+        <p class="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-400">
+            Order confirmed
+        </p>
+        <h1 class="text-3xl font-bold tracking-tight">Thank you for your purchase</h1>
+        <p class="mt-2 text-zinc-400">
+            Your order has been placed and the inventory has been updated.
+        </p>
+    </div>
+
+    <section class="mb-6 grid gap-px overflow-hidden border border-zinc-800 bg-zinc-800 sm:grid-cols-3">
+        <div class="bg-zinc-900 p-5">
+            <p class="text-sm text-zinc-400">Order ID</p>
+            <p class="mt-1 font-semibold" th:text="${order.id}">1</p>
+        </div>
+        <div class="bg-zinc-900 p-5">
+            <p class="text-sm text-zinc-400">Order Date</p>
+            <p class="mt-1 font-semibold"
+               th:text="${#temporals.format(order.orderDate, 'd/m/y')}">
+                Oct 4, 2026 5:00 PM
+            </p>
+        </div>
+        <div class="bg-zinc-900 p-5">
+            <p class="text-sm text-zinc-400">Total Paid</p>
+            <p class="mt-1 font-semibold text-emerald-400"
+               th:text="${'CAD $' + #numbers.formatDecimal(order.totalAmount, 1, 2)}">
+                CAD $0.00
+            </p>
+        </div>
+    </section>
+
+    <section class="overflow-hidden border border-zinc-800 bg-zinc-900">
+        <div class="border-b border-zinc-800 px-6 py-4">
+            <h2 class="text-lg font-semibold">Items purchased</h2>
+        </div>
+
+        <table class="w-full text-left">
+            <thead class="border-b border-zinc-800 text-sm text-zinc-400">
+            <tr>
+                <th class="px-6 py-3 font-medium">Item</th>
+                <th class="px-6 py-3 text-right font-medium">Price</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800">
+            <tr th:each="product : ${order.products}">
+                <td class="px-6 py-4">
+                    <span th:if="${product instanceof T(csd230.lab1.entities.PublicationEntity)}"
+                          th:text="${product.title}">Publication</span>
+                    <span th:if="${product instanceof T(csd230.lab1.entities.TicketEntity)}"
+                          th:text="${product.description}">Ticket</span>
+                </td>
+                <td class="px-6 py-4 text-right text-zinc-300"
+                    th:text="${'CAD $' + #numbers.formatDecimal(product.price, 1, 2)}">
+                    CAD $0.00
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="mt-6">
+        <a th:href="@{/books}"
+           class="inline-block bg-indigo-600 px-4 py-2 text-sm font-semibold text-white
+                  transition hover:bg-indigo-500">
+            Continue Shopping
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

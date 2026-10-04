@@ -1,15 +1,11 @@
 package csd230.lab1;
-import com.github.javafaker.Commerce;
-import com.github.javafaker.Faker;
+
 import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.CartEntity;
-import csd230.lab1.entities.ProductEntity;
-import csd230.lab1.pojos.Cart;
-import csd230.lab1.pojos.Magazine;
-import csd230.lab1.pojos.Product;
+
 import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.CartEntityRepository;
-import csd230.lab1.repositories.ProductEntityRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,9 +17,11 @@ import java.util.Optional;
 @SpringBootApplication
 public class Application  implements CommandLineRunner {
 	private final BookEntityRepository bookRepository;
+	private final CartEntityRepository cartRepository;
 
-	public Application(BookEntityRepository bookRepository) {
+	public Application(BookEntityRepository bookRepository, CartEntityRepository cartRepository) {
 		this.bookRepository = bookRepository;
+		this.cartRepository = cartRepository;
 	}
 
 	public static void main(String[] args) {
@@ -55,6 +53,10 @@ public class Application  implements CommandLineRunner {
 		second.setAuthor("Course Example");
 		second.setIsbn("0-8655-0705-8");
 		bookRepository.save(second);
+
+
+		cartRepository.findById(1L)
+				.orElseGet(() -> cartRepository.save(new CartEntity()));
 
 
 	}

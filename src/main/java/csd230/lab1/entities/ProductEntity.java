@@ -27,4 +27,11 @@ public abstract class ProductEntity implements Serializable, SaleableItem {
     public String toString() {
         return "ProductEntity{id=" + id + "} : " + super.toString();
     }
+
+    public String getProductType() {
+        return this.getClass().getSimpleName();
+    }
+
+
+
 }
