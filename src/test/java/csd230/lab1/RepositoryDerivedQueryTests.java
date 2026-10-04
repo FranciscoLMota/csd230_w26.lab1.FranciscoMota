@@ -3,7 +3,7 @@ package csd230.lab1;
 import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.DiscMagEntity;
 import csd230.lab1.entities.TicketEntity;
-import csd230.lab1.repositories.BookRepository;
+import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.DiscMagRepository;
 import csd230.lab1.repositories.TicketRepository;
 import org.junit.jupiter.api.Test;
@@ -20,30 +20,30 @@ import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = NONE)
 class RepositoryDerivedQueryTests {
 
-    @Autowired private BookRepository bookRepository;
+    @Autowired private BookEntityRepository bookEntityRepository;
     @Autowired private DiscMagRepository discMagRepository;
     @Autowired private TicketRepository ticketRepository;
 
     @Test
     void findsBooksByExactAndPartialTitle() {
-        BookEntity book = bookRepository.saveAndFlush(
+        BookEntity book = bookEntityRepository.saveAndFlush(
                 new BookEntity("Dungeon Master's Guide", 59.99, 3,
                         "Wizards of the Coast", "9780786968529"));
 
-        assertThat(bookRepository.findByTitle("Dungeon Master's Guide")).containsExactly(book);
-        assertThat(bookRepository.findByTitleLike("%Dungeon Master%")).containsExactly(book);
-        assertThat(bookRepository.findByTitle("Missing Spellbook")).isEmpty();
+        assertThat(bookEntityRepository.findByTitle("Dungeon Master's Guide")).containsExactly(book);
+        assertThat(bookEntityRepository.findByTitleLike("%Dungeon Master%")).containsExactly(book);
+        assertThat(bookEntityRepository.findByTitle("Missing Spellbook")).isEmpty();
     }
 
     @Test
     void findsBooksByAuthorIsbnAndCustomJpqlQuery() {
-        BookEntity book = bookRepository.saveAndFlush(
+        BookEntity book = bookEntityRepository.saveAndFlush(
                 new BookEntity("Player's Handbook", 59.99, 2,
                         "Wizards of the Coast", "9780786969517"));
 
-        assertThat(bookRepository.findByAuthor("Wizards of the Coast")).containsExactly(book);
-        assertThat(bookRepository.findByIsbn("9780786969517")).containsExactly(book);
-        assertThat(bookRepository.searchByAuthor("wizards of the coast")).containsExactly(book);
+        assertThat(bookEntityRepository.findByAuthor("Wizards of the Coast")).containsExactly(book);
+        assertThat(bookEntityRepository.findByIsbn("9780786969517")).containsExactly(book);
+        assertThat(bookEntityRepository.searchByAuthor("wizards of the coast")).containsExactly(book);
     }
 
     @Test

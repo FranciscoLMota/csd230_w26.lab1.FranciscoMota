@@ -3,7 +3,7 @@ package csd230.lab1;
 import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.CartEntity;
 import csd230.lab1.entities.TicketEntity;
-import csd230.lab1.repositories.BookRepository;
+import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.TicketRepository;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = NONE)
 class RepositoryCrudTests {
 
-    @Autowired private BookRepository bookRepository;
+    @Autowired private BookEntityRepository bookEntityRepository;
     @Autowired private CartEntityRepository cartEntityRepository;
     @Autowired private TicketRepository ticketRepository;
 
@@ -43,24 +43,24 @@ class RepositoryCrudTests {
 
     @Test
     void bookRepositorySupportsCrud() {
-        BookEntity book = bookRepository.saveAndFlush(
+        BookEntity book = bookEntityRepository.saveAndFlush(
                 new BookEntity("Mordenkainen Presents: Monsters of the Multiverse",
                         59.99, 3, "Wizards of the Coast", "9780786967872"));
         Long bookId = book.getId();
 
-        assertThat(bookRepository.findById(bookId)).contains(book);
+        assertThat(bookEntityRepository.findById(bookId)).contains(book);
 
         book.setCopies(7);
         book.setPrice(34.99);
-        bookRepository.saveAndFlush(book);
-        assertThat(bookRepository.findById(bookId)).get().satisfies(savedBook -> {
+        bookEntityRepository.saveAndFlush(book);
+        assertThat(bookEntityRepository.findById(bookId)).get().satisfies(savedBook -> {
             assertThat(savedBook.getCopies()).isEqualTo(7);
             assertThat(savedBook.getPrice()).isEqualTo(34.99);
         });
 
-        bookRepository.deleteById(bookId);
-        bookRepository.flush();
-        assertThat(bookRepository.existsById(bookId)).isFalse();
+        bookEntityRepository.deleteById(bookId);
+        bookEntityRepository.flush();
+        assertThat(bookEntityRepository.existsById(bookId)).isFalse();
     }
 
     @Test

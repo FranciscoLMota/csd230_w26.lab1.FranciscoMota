@@ -7,6 +7,7 @@ import csd230.lab1.entities.ProductEntity;
 import csd230.lab1.pojos.Cart;
 import csd230.lab1.pojos.Magazine;
 import csd230.lab1.pojos.Product;
+import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.ProductEntityRepository;
 import jakarta.transaction.Transactional;
@@ -19,74 +20,42 @@ import java.util.Optional;
 
 @SpringBootApplication
 public class Application  implements CommandLineRunner {
-	private final ProductEntityRepository productRepository;
-	private final CartEntityRepository cartRepository;
+	private final BookEntityRepository bookRepository;
 
-	public Application(ProductEntityRepository productRepository,
-	                   CartEntityRepository cartRepository
-	) {
-		this.productRepository = productRepository;
-		this.cartRepository = cartRepository;
+	public Application(BookEntityRepository bookRepository) {
+		this.bookRepository = bookRepository;
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
+
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception {
-		Faker faker = new Faker();
-		Commerce cm = faker.commerce();
-		com.github.javafaker.Number number = faker.number();
-		com.github.javafaker.Book fakeBook = faker.book();
-		String name=cm.productName();
-		String description=cm.material();
-		String priceString = faker.commerce().price();
 
-		BookEntity  book = new BookEntity(
-				fakeBook.title(),
-				Double.parseDouble(priceString),
-				10,
-				fakeBook.author());
-		;
-
-		csd230.lab1.entities.MagazineEntity magazine = new csd230.lab1.entities.MagazineEntity(
-				faker.lorem().word() + " Magazine",
-				12.99,
-				20,
-				50,
-				java.time.LocalDateTime.now()
-		);
-
-		CartEntity cart=new CartEntity();
-		cartRepository.save(cart);
-
-		// create a book
-		// add book to the cart
-		cart.addProduct(book);
-//        book.setCart(cart); // dont have to set cart because cart.addProduct() does it for you
-		cartRepository.save(cart);
-
-		cart.addProduct(magazine);
-//        magazine.setCart(cart);
-		cartRepository.save(cart);
-
-
-//        productRepository.save(book);
-
-
-		List<ProductEntity> allProducts = productRepository.findAll();
-
-		for(ProductEntity p : allProducts) {
-			System.out.println(p.toString());
+		if (bookRepository.count() > 0) {
+			return;
 		}
-		List<CartEntity> allCarts = cartRepository.findAll();
-		for(CartEntity c : allCarts) {
-			System.out.println(c.toString());
-			for(ProductEntity p : c.getProducts()) {
-				System.out.println(p.toString());
-			}
-		}
+
+
+		BookEntity first = new BookEntity();
+		first.setTitle("Spring MVC Basics");
+		first.setPrice(29.99);
+		first.setCopies(5);
+		first.setAuthor("Course Example");
+		first.setIsbn("0-2680-1008-0");
+		bookRepository.save(first);
+
+
+		BookEntity second = new BookEntity();
+		second.setTitle("Thymeleaf in Practice");
+		second.setPrice(34.99);
+		second.setCopies(4);
+		second.setAuthor("Course Example");
+		second.setIsbn("0-8655-0705-8");
+		bookRepository.save(second);
+
 
 	}
 
