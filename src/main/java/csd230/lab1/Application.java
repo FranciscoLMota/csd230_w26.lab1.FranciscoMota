@@ -3,10 +3,7 @@ package csd230.lab1;
 
 import com.github.javafaker.Commerce;
 import com.github.javafaker.Faker;
-import csd230.lab1.entities.BookEntity;
-import csd230.lab1.entities.CartEntity;
-import csd230.lab1.entities.ProductEntity;
-import csd230.lab1.entities.UserEntity;
+import csd230.lab1.entities.*;
 import csd230.lab1.pojos.Cart;
 import csd230.lab1.pojos.Magazine;
 import csd230.lab1.pojos.Product;
@@ -60,43 +57,27 @@ public class Application implements CommandLineRunner {
 		String description = cm.material();
 		String priceString = faker.commerce().price();
 
+		for (int i = 0; i < 5; i++) {
+			BookEntity book = new BookEntity(
+					fakeBook.title(),
+					Double.parseDouble(priceString),
+					10,
+					fakeBook.author());
+			;
+			productRepository.save(book);
+		}
 
-		BookEntity book = new BookEntity(
-				fakeBook.title(),
-				Double.parseDouble(priceString),
-				10,
-				fakeBook.author());
-		;
 
 
 		// --- START NEW CODE ---
-		csd230.lab1.entities.MagazineEntity magazine = new csd230.lab1.entities.MagazineEntity(
+		MagazineEntity magazine = new MagazineEntity(
 				faker.lorem().word() + " Magazine",
 				12.99,
 				20,
 				50,
 				java.time.LocalDateTime.now()
 		);
-
-
-		CartEntity cart = new CartEntity();
-		cartRepository.save(cart);
-
-
-		// create a book
-		// add book to the cart
-		cart.addProduct(book);
-		// book.setCart(cart); // dont have to set cart because cart.addProduct() does it for you
-		cartRepository.save(cart);
-
-
-		cart.addProduct(magazine);
-		// magazine.setCart(cart);
-		cartRepository.save(cart);
-
-
-		// productRepository.save(book);
-
+		productRepository.save(magazine);
 
 		List<ProductEntity> allProducts = productRepository.findAll();
 
@@ -104,14 +85,6 @@ public class Application implements CommandLineRunner {
 		for (ProductEntity p : allProducts) {
 			System.out.println(p.toString());
 		}
-		List<CartEntity> allCarts = cartRepository.findAll();
-		for (CartEntity c : allCarts) {
-			System.out.println(c.toString());
-			for (ProductEntity p : c.getProducts()) {
-				System.out.println(p.toString());
-			}
-		}
-
 
 		// ------------------------------------
 		// CREATE USERS (Lecture 2.6)

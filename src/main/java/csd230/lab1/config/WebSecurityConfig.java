@@ -30,7 +30,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         // 1. Allow public access to specific endpoints
-                        .requestMatchers("/h2-console/**", "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/login", "/register", "/css/**", "/js/**").permitAll()
 
                         // 2. Admin only endpoints (CRUD operations on books)
                         .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**").hasRole("ADMIN")

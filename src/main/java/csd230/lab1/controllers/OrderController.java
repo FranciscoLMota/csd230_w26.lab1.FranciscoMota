@@ -1,30 +1,32 @@
 package csd230.lab1.controllers;
 
-import csd230.lab1.entities.CartEntity;
-import csd230.lab1.entities.OrderEntity;
-import csd230.lab1.entities.ProductEntity;
-import csd230.lab1.entities.PublicationEntity;
+import csd230.lab1.entities.*;
 import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.OrderEntityRepository;
 import csd230.lab1.repositories.ProductEntityRepository;
+import csd230.lab1.repositories.UserEntityRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class OrderController {
-    private static final long DEFAULT_CART_ID = 1L;
 
     private final CartEntityRepository cartRepository;
     private final OrderEntityRepository orderRepository;
     private final ProductEntityRepository productRepository;
+    @Autowired
+    private UserEntityRepository userRepository; // Inject this!
+
 
     public OrderController(CartEntityRepository cartRepository,
                            OrderEntityRepository orderRepository,
@@ -34,10 +36,29 @@ public class OrderController {
         this.productRepository = productRepository;
     }
 
+    private CartEntity getCartForCurrentUser(Principal principal) {
+        // 1. Get username from security context
+        String username = principal.getName();
+        // 2. Find User in DB
+        UserEntity user = userRepository.findByUsername(username);
+
+        // 3. Find Cart for this User
+        CartEntity cart = cartRepository.findByUser(user);
+
+        // 4. If no cart exists, create one and link it to the user
+        if (cart == null) {
+            cart = new CartEntity();
+            cart.setUser(user);
+            cartRepository.save(cart);
+        }
+        return cart;
+    }
+
+
     @Transactional
     @PostMapping("/cart/checkout")
-    public String checkout() {
-        CartEntity cart = cartRepository.findById(DEFAULT_CART_ID).orElse(null);
+    public String checkout(Principal principal) {
+        CartEntity cart = getCartForCurrentUser(principal);
         if (cart == null || cart.getProducts().isEmpty()) {
             return "redirect:/cart?checkoutError=emptyCart";
         }
