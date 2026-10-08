@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Add Book</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -7,16 +8,46 @@
 
 <body class="min-h-screen bg-zinc-950 text-zinc-100">
 
-<main class="mx-auto max-w-3xl px-6 py-12">
+<div class="mb-8 flex items-center justify-between border-b border-zinc-800 p-5">
 
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold tracking-tight">
-            Add New Book
-        </h1>
-        <p class="mt-1 text-sm text-zinc-400">
-            Enter the information for the new book.
-        </p>
+    <div class="text-sm text-zinc-400">
+        Logged in as
+        <span sec:authentication="name"
+              class="font-medium text-zinc-200">
+                User
+            </span>
     </div>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit"
+                class="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300
+                           transition hover:border-red-500/50 hover:bg-red-500/10
+                           hover:text-red-400">
+            Sign Out
+        </button>
+    </form>
+
+</div>
+
+<main class="mx-auto max-w-6xl p-6 py-3">
+
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight">
+                Add New Book
+            </h1>
+            <p class="mt-1 text-sm text-zinc-400">
+                Enter the information for the new book.
+            </p>
+        </div>
+
+        <a th:href="@{/books}"
+           class="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 transition
+                 hover:border-zinc-500 hover:bg-zinc-800 hover:text-white">
+            < Back
+        </a>
+    </div>
+
 
     <form action="#"
           th:action="@{/books/add}"
@@ -97,13 +128,6 @@
                            transition hover:bg-indigo-500">
                 Add Book
             </button>
-
-            <a th:href="@{/books}"
-               class="border border-zinc-700 px-4 py-2 text-sm font-medium
-                      text-zinc-300 transition
-                      hover:border-zinc-500 hover:bg-zinc-800 hover:text-white">
-                Back to List
-            </a>
 
         </div>
 
