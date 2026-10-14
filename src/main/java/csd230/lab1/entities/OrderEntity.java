@@ -23,7 +23,7 @@ public class OrderEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private double totalAmount;
+    private Double totalAmount;
     private LocalDateTime orderDate;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -45,10 +45,10 @@ public class OrderEntity {
         this.id = id;
     }
 
-    public double getTotalAmount() {
+    public Double getTotalAmount() {
         return totalAmount;
     }
-    public void setTotalAmount(double totalAmount) {
+    public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
     }
 

@@ -82,7 +82,7 @@ public class OrderController {
         OrderEntity order = new OrderEntity();
         order.setOrderDate(LocalDateTime.now());
 
-        double totalAmount = 0.0;
+        Double totalAmount = 0.0;
         for (ProductEntity product : products) {
             totalAmount += product.getPrice();
 

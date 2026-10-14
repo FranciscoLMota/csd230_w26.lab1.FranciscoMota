@@ -11,14 +11,14 @@ import java.util.Objects;
  * DTO for {@link OrderEntity}
  */
 public class Order {
-    private double totalAmount;
+    private Double totalAmount;
     private LocalDateTime orderDate;
     private List<Product> products = new ArrayList<>();
 
     public Order() {
     }
 
-    public Order(double totalAmount, LocalDateTime orderDate, List<Product> products) {
+    public Order(Double totalAmount, LocalDateTime orderDate, List<Product> products) {
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
         this.products = products;
@@ -28,11 +28,11 @@ public class Order {
         products.add(product);
     }
 
-    public double getTotalAmount() {
+    public Double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(double totalAmount) {
+    public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -62,7 +62,7 @@ public class Order {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         return Objects.hash(totalAmount, orderDate, products);
     }
 

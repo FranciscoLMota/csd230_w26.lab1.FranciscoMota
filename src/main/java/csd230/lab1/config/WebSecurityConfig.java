@@ -30,7 +30,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         // 1. Allow public access to specific endpoints
-                        .requestMatchers("/h2-console/**", "/login", "/register", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/login", "/register","/css/**", "/js/**", "/api/rest/**", "/error").permitAll()
 
                         // --- SWAGGER ---
                         .requestMatchers(
@@ -46,6 +46,7 @@ public class WebSecurityConfig {
 
                         // 3. All other requests (view books, cart) require login
                         .anyRequest().authenticated()
+
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -62,9 +63,10 @@ public class WebSecurityConfig {
         // Required for H2 Console to work with Spring Security (it uses frames)
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
-        // Disable CSRF specifically for H2 Console
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
-
+        // Disable CSRF specifically for H2 Console and REST api
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**", "/api/rest/**")
+        );
 
         return http.build();
     }

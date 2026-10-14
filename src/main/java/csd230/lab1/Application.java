@@ -14,7 +14,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 import java.util.List;
@@ -57,7 +60,7 @@ public class Application implements CommandLineRunner {
 		String description = cm.material();
 		String priceString = faker.commerce().price();
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			BookEntity book = new BookEntity(
 					fakeBook.title(),
 					Double.parseDouble(priceString),
@@ -105,4 +108,15 @@ public class Application implements CommandLineRunner {
 
 
 	}
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/api/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE");
+			}
+		};
+	}
+
 }

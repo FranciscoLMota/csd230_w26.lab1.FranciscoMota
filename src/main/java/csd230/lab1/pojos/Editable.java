@@ -54,7 +54,7 @@ public abstract class Editable implements Serializable, SaleableItem {
         return in2.nextLine();
     }
 
-    public int getInput(int i) {
+    public Integer getInput(int i) {
         String s = input.nextLine();
         if (s.trim().isEmpty()) {
             return i;
@@ -63,7 +63,7 @@ public abstract class Editable implements Serializable, SaleableItem {
         return in2.nextInt();
     }
 
-    public double getInput(double i) {
+    public Double getInput(Double i) {
         String s = input.nextLine();
         if (s.trim().isEmpty()) {
             return i;
