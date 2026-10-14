@@ -5,6 +5,9 @@ import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.OrderEntityRepository;
 import csd230.lab1.repositories.ProductEntityRepository;
 import csd230.lab1.repositories.UserEntityRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag(name = "Orders", description = "Operations related to Order Management")
 @Controller
 public class OrderController {
 
@@ -56,6 +60,8 @@ public class OrderController {
 
 
     @Transactional
+    @Operation(summary = "Check out the cart", description = "Creates an order from the current user's cart and redirects to the order confirmation")
+    @ApiResponse(responseCode = "302", description = "Checkout processed; redirecting to the order confirmation or cart")
     @PostMapping("/cart/checkout")
     public String checkout(Principal principal) {
         CartEntity cart = getCartForCurrentUser(principal);
@@ -97,6 +103,8 @@ public class OrderController {
         return "redirect:/orders/confirmation/" + savedOrder.getId();
     }
 
+    @Operation(summary = "View an order confirmation", description = "Returns the HTML view containing the selected order's details")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the order confirmation")
     @GetMapping("/orders/confirmation/{id}")
     public String viewOrderConfirmation(@PathVariable Long id, Model model) {
         OrderEntity order = orderRepository.findById(id).orElse(null);

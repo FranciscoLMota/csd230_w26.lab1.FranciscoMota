@@ -3,6 +3,9 @@ import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.CartEntity;
 import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.CartEntityRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,7 @@ import csd230.lab1.repositories.UserEntityRepository;
 import csd230.lab1.entities.UserEntity;
 
 
+@Tag(name = "Cart", description = "Operations related to Shopping Cart Management")
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -44,6 +48,8 @@ public class CartController {
         return cart;
     }
 
+    @Operation(summary = "View the cart", description = "Returns the HTML view of the current user's cart")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the cart")
     @GetMapping
     public String viewCart(Model model, Principal principal) {
         CartEntity cart = getCartForCurrentUser(principal);
@@ -51,6 +57,8 @@ public class CartController {
         return "cart/cartDetails";
     }
 
+    @Operation(summary = "Add a book to the cart", description = "Adds the selected book to the current user's cart and redirects to the book list")
+    @ApiResponse(responseCode = "302", description = "Book added; redirecting to the book list")
     @GetMapping("/add/{bookId}")
     public String addToCart(@PathVariable Long bookId, Principal principal) {
         CartEntity cart = getCartForCurrentUser(principal);
@@ -63,6 +71,8 @@ public class CartController {
     }
 
 
+    @Operation(summary = "Remove a book from the cart", description = "Removes the selected book from the current user's cart and redirects to the cart")
+    @ApiResponse(responseCode = "302", description = "Book removed; redirecting to the cart")
     @GetMapping("/remove/{bookId}")
     public String removeFromCart(@PathVariable Long bookId, Principal principal) {
         CartEntity cart = getCartForCurrentUser(principal);
