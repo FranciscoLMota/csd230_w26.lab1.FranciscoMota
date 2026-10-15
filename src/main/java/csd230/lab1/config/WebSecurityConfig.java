@@ -41,8 +41,13 @@ public class WebSecurityConfig {
                                 "/v3/api-docs.yaml"      // YAML version
                         ).permitAll()
 
-                        // 2. Admin only endpoints (CRUD operations on books)
-                        .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**").hasRole("ADMIN")
+                        // 2. Admin only endpoints (product CRUD operations)
+                        .requestMatchers(
+                                "/books/add", "/books/edit/**", "/books/delete/**",
+                                "/magazines/add", "/magazines/edit/**", "/magazines/delete/**",
+                                "/disc-mags/add", "/disc-mags/edit/**", "/disc-mags/delete/**",
+                                "/tickets/add", "/tickets/edit/**", "/tickets/delete/**"
+                        ).hasRole("ADMIN")
 
                         // 3. All other requests (view books, cart) require login
                         .anyRequest().authenticated()
@@ -50,7 +55,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/books", true)
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout((logout) -> logout

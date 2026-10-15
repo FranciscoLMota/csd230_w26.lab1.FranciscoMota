@@ -4,9 +4,6 @@ package csd230.lab1;
 import com.github.javafaker.Commerce;
 import com.github.javafaker.Faker;
 import csd230.lab1.entities.*;
-import csd230.lab1.pojos.Cart;
-import csd230.lab1.pojos.Magazine;
-import csd230.lab1.pojos.Product;
 import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.ProductEntityRepository;
 import csd230.lab1.repositories.UserEntityRepository;
@@ -21,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 
 @SpringBootApplication
@@ -56,31 +53,40 @@ public class Application implements CommandLineRunner {
 		Commerce cm = faker.commerce();
 		com.github.javafaker.Number number = faker.number();
 		com.github.javafaker.Book fakeBook = faker.book();
-		String name = cm.productName();
-		String description = cm.material();
-		String priceString = faker.commerce().price();
-
 		for (int i = 0; i < 10; i++) {
 			BookEntity book = new BookEntity(
 					fakeBook.title(),
-					Double.parseDouble(priceString),
+					Double.parseDouble(faker.commerce().price()),
 					10,
-					fakeBook.author());
-			;
+					fakeBook.author(),
+					faker.numerify("978-#-####-####-#"));
 			productRepository.save(book);
 		}
 
+		for (int i = 0; i < 10; i++) {
+			productRepository.save(new MagazineEntity(
+					cm.department() + " Magazine",
+					Double.parseDouble(cm.price()),
+					number.numberBetween(5, 30),
+					number.numberBetween(10, 100),
+					LocalDateTime.now().minusMonths(number.numberBetween(0, 12))));
+		}
 
+		for (int i = 0; i < 10; i++) {
+			productRepository.save(new DiscMagEntity(
+					cm.department() + " Disc Magazine",
+					Double.parseDouble(cm.price()),
+					number.numberBetween(5, 30),
+					number.numberBetween(10, 100),
+					LocalDateTime.now().minusMonths(number.numberBetween(0, 12)),
+					faker.bool().bool()));
+		}
 
-		// --- START NEW CODE ---
-		MagazineEntity magazine = new MagazineEntity(
-				faker.lorem().word() + " Magazine",
-				12.99,
-				20,
-				50,
-				java.time.LocalDateTime.now()
-		);
-		productRepository.save(magazine);
+		for (int i = 0; i < 10; i++) {
+			productRepository.save(new TicketEntity(
+					faker.music().genre() + " concert ticket",
+					Double.parseDouble(cm.price())));
+		}
 
 		List<ProductEntity> allProducts = productRepository.findAll();
 

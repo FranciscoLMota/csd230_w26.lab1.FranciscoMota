@@ -11,26 +11,7 @@
 <body class="min-h-screen bg-zinc-950 text-zinc-100">
 
 
-<div class="mb-8 flex items-center justify-between border-b border-zinc-800 p-5">
-
-    <div class="text-sm text-zinc-400">
-        Logged in as
-        <span sec:authentication="name"
-              class="font-medium text-zinc-200">
-                User
-            </span>
-    </div>
-
-    <form th:action="@{/logout}" method="post">
-        <button type="submit"
-                class="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300
-                           transition hover:border-red-500/50 hover:bg-red-500/10
-                           hover:text-red-400">
-            Sign Out
-        </button>
-    </form>
-
-</div>
+<header th:replace="~{fragments/header :: catalogHeader}"></header>
 
 
 <main class="mx-auto max-w-6xl p-6 py-3">

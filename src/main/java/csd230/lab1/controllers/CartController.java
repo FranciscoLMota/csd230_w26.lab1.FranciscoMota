@@ -1,8 +1,8 @@
 package csd230.lab1.controllers;
-import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.CartEntity;
-import csd230.lab1.repositories.BookEntityRepository;
+import csd230.lab1.entities.ProductEntity;
 import csd230.lab1.repositories.CartEntityRepository;
+import csd230.lab1.repositories.ProductEntityRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class CartController {
     @Autowired
     private CartEntityRepository cartRepository;
     @Autowired
-    private BookEntityRepository bookRepository;
+    private ProductEntityRepository productRepository;
     @Autowired
     private UserEntityRepository userRepository; // Inject this!
 
@@ -57,29 +57,29 @@ public class CartController {
         return "cart/cartDetails";
     }
 
-    @Operation(summary = "Add a book to the cart", description = "Adds the selected book to the current user's cart and redirects to the book list")
-    @ApiResponse(responseCode = "302", description = "Book added; redirecting to the book list")
-    @GetMapping("/add/{bookId}")
-    public String addToCart(@PathVariable Long bookId, Principal principal) {
+    @Operation(summary = "Add a product to the cart", description = "Adds the selected product to the current user's cart and redirects to the catalog")
+    @ApiResponse(responseCode = "302", description = "Product added; redirecting to the catalog")
+    @GetMapping("/add/{productId}")
+    public String addToCart(@PathVariable Long productId, Principal principal) {
         CartEntity cart = getCartForCurrentUser(principal);
-        BookEntity book = bookRepository.findById(bookId).orElse(null);
-        if (book != null) {
-            cart.addProduct(book);
+        ProductEntity product = productRepository.findById(productId).orElse(null);
+        if (product != null) {
+            cart.addProduct(product);
             cartRepository.save(cart);
         }
-        return "redirect:/books";
+        return "redirect:/";
     }
 
 
-    @Operation(summary = "Remove a book from the cart", description = "Removes the selected book from the current user's cart and redirects to the cart")
-    @ApiResponse(responseCode = "302", description = "Book removed; redirecting to the cart")
-    @GetMapping("/remove/{bookId}")
-    public String removeFromCart(@PathVariable Long bookId, Principal principal) {
+    @Operation(summary = "Remove a product from the cart", description = "Removes the selected product from the current user's cart and redirects to the cart")
+    @ApiResponse(responseCode = "302", description = "Product removed; redirecting to the cart")
+    @GetMapping("/remove/{productId}")
+    public String removeFromCart(@PathVariable Long productId, Principal principal) {
         CartEntity cart = getCartForCurrentUser(principal);
-        BookEntity book = bookRepository.findById(bookId).orElse(null);
+        ProductEntity product = productRepository.findById(productId).orElse(null);
 
-        if (book != null) {
-            cart.getProducts().remove(book);
+        if (product != null) {
+            cart.getProducts().remove(product);
             cartRepository.save(cart);
         }
         return "redirect:/cart";
