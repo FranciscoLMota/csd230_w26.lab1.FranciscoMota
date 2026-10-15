@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 public class TicketEntity extends ProductEntity {
     private String description;
     public TicketEntity() {}
-    public TicketEntity(String d, double p) { super(p); this.description = d; }
+    public TicketEntity(String d, Double p) { super(p); this.description = d; }
 
     @Override public void sellItem() { System.out.println("Selling Ticket: " + description + " for $" + getPrice()); }
 

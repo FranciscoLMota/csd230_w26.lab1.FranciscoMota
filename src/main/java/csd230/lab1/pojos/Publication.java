@@ -9,7 +9,7 @@ public abstract class Publication extends Product {
     public Publication() {
     }
 
-    public Publication(String title, double price, int copies) {
+    public Publication(String title, Double price, int copies) {
         this.title = title;
         setPrice(price);
         this.copies = copies;
@@ -50,7 +50,7 @@ public abstract class Publication extends Product {
         this.title = title;
     }
 
-    public int getCopies() {
+    public Integer getCopies() {
         return copies;
     }
 
