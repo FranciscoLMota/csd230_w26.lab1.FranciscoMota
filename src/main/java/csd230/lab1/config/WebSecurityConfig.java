@@ -42,30 +42,33 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         // 1. Allow public access to specific endpoints
-                        .requestMatchers(
-                                "/h2-console/**",
-                                "/login", "/register",
-                                "/css/**", "/js/**",
-                                // "/api/rest/**", //REMOVING this line as we need to authorize it now
-                                "/error").permitAll()
-                        // --- ADD THESE LINES FOR SWAGGER ---
-                        .requestMatchers(
-                                "/v3/api-docs",          // The actual JSON data
-                                "/v3/api-docs/**",       // Support for groups
-                                "/swagger-ui/**",        // UI static resources
-                                "/swagger-ui.html",      // UI entry point
-                                "/v3/api-docs.yaml"      // YAML version
-                        ).permitAll()
-                        // NEW Rest auth end points so users can auth
-                        .requestMatchers("/api/rest/auth/**").permitAll()
-                        // ------------------------------------
-                        // 2. Admin only endpoints (CRUD operations on books)
-                        .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**").hasRole("ADMIN")
-                        // NEW REST API Security (Requires Role)
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/rest/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/rest/**").hasRole("ADMIN")
-                        // 3. All other requests (view books, cart) require login
-                        .anyRequest().authenticated()
+//                        .requestMatchers(
+//                                "/h2-console/**",
+//                                "/login", "/register",
+//                                "/css/**", "/js/**",
+//                                // "/api/rest/**", //REMOVING this line as we need to authorize it now
+//                                "/error").permitAll()
+//                        // --- ADD THESE LINES FOR SWAGGER ---
+//                        .requestMatchers(
+//                                "/v3/api-docs",          // The actual JSON data
+//                                "/v3/api-docs/**",       // Support for groups
+//                                "/swagger-ui/**",        // UI static resources
+//                                "/swagger-ui.html",      // UI entry point
+//                                "/v3/api-docs.yaml"      // YAML version
+//                        ).permitAll()
+//                        // NEW Rest auth end points so users can auth
+//                        .requestMatchers("/api/rest/auth/**").permitAll()
+//                        // ------------------------------------
+//                        // 2. Admin only endpoints (CRUD operations on books)
+//                        .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**").hasRole("ADMIN")
+//                        // NEW REST API Security (Requires Role)
+//                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/rest/**").hasAnyRole("USER", "ADMIN")
+//                        .requestMatchers("/api/rest/**").hasRole("ADMIN")
+//                        // 3. All other requests (view books, cart) require login
+//                        .anyRequest().authenticated()
+
+                        // TEMPORARY: early React exercises only; restore protection in 2.12
+                        .requestMatchers("/**").permitAll()
                 )
                 // REST API Error Handling:
                 // If the URL starts with /api/rest/, return 401. Otherwise, redirect to /login.
