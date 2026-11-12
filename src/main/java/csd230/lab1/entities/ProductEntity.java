@@ -12,19 +12,26 @@ public abstract class ProductEntity implements Serializable, SaleableItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double price;
+    private Double price;
     @ManyToMany(mappedBy = "products")
     private Set<CartEntity> carts = new HashSet<>();
     protected ProductEntity() {}
-    protected ProductEntity(double price) { this.price = price; }
+    protected ProductEntity(Double price) { this.price = price; }
     public Set<CartEntity> getCarts() { return carts; }
     public void setCarts(Set<CartEntity> carts) { this.carts = carts; }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    @Override public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    @Override public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
     @Override
     public String toString() {
         return "ProductEntity{id=" + id + "} : " + super.toString();
     }
+
+    public String getProductType() {
+        return this.getClass().getSimpleName();
+    }
+
+
+
 }

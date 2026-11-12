@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<BookEntity, Long> {
+public interface BookEntityRepository extends JpaRepository<BookEntity, Long> {
     List<BookEntity> findByTitle(String title);
     List<BookEntity> findByTitleLike(String title);
     List<BookEntity> findByAuthor(String author);

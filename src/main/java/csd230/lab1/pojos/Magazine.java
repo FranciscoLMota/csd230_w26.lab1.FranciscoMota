@@ -9,7 +9,7 @@ public class Magazine extends Publication {
     public Magazine() {
     }
 
-    public Magazine(int orderQty, Date currentIssue, String title, double price, int copies) {
+    public Magazine(int orderQty, Date currentIssue, String title, Double price, int copies) {
         super(title, price, copies);
         this.orderQty = orderQty;
         this.currentIssue = currentIssue;
@@ -45,7 +45,7 @@ public class Magazine extends Publication {
         setCopies(getCopies() - 1);
     }
 
-    public int getOrderQty() { return orderQty; }
+    public Integer getOrderQty() { return orderQty; }
     public void setOrderQty(int o) { this.orderQty = o; }
     public Date getCurrentIssue() { return currentIssue; }
     public void setCurrentIssue(Date d) { this.currentIssue = d; }

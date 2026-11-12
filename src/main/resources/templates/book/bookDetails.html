@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Book List</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="min-h-screen bg-zinc-950 text-zinc-100">
+
+
+<header th:replace="~{fragments/header :: catalogHeader}"></header>
+
+
+<main class="mx-auto max-w-6xl p-6 py-3">
+
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight">
+                Book - <span class="col-span-2 text-zinc-200" th:text="${book.title}"></span>
+            </h1>
+        </div>
+
+        <a th:href="@{/books}"
+           class="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 transition
+                 hover:border-zinc-500 hover:bg-zinc-800 hover:text-white">
+            < Back
+        </a>
+    </div>
+
+    <div class="overflow-hidden border border-zinc-800 bg-zinc-900">
+
+        <div th:if="${book}"
+             class="border border-zinc-800 bg-zinc-900">
+
+            <div class="border-b border-zinc-800 px-6 py-4">
+                <h2 class="text-lg font-semibold text-zinc-100">
+                    Book Details
+                </h2>
+            </div>
+
+            <div class="divide-y divide-zinc-800">
+
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <span class="font-medium text-zinc-400">ID</span>
+                    <span class="col-span-2 text-zinc-200"
+                          th:text="${book.id}"></span>
+                </div>
+
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <span class="font-medium text-zinc-400">Title</span>
+                    <span class="col-span-2 text-zinc-200"
+                          th:text="${book.title}"></span>
+                </div>
+
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <span class="font-medium text-zinc-400">Author</span>
+                    <span class="col-span-2 text-zinc-200"
+                          th:text="${book.author}"></span>
+                </div>
+
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <span class="font-medium text-zinc-400">Price</span>
+                    <span class="col-span-2 text-zinc-200"
+                          th:text="${book.price}"></span>
+                </div>
+
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <span class="font-medium text-zinc-400">Copies</span>
+                    <span class="col-span-2 text-zinc-200"
+                          th:text="${book.copies}"></span>
+                </div>
+
+                <div class="grid grid-cols-3 px-6 py-4">
+                    <span class="font-medium text-zinc-400">ISBN</span>
+                    <span class="col-span-2 text-zinc-200"
+                          th:text="${book.isbn}"></span>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div th:unless="${book}"
+             class="border border-zinc-800 bg-zinc-900 px-6 py-8 text-center">
+
+            <p class="text-zinc-400">
+                No book found.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+</body>
+</html>

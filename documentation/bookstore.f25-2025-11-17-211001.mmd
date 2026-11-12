@@ -1,12 +1,13 @@
 classDiagram
-    Product <|--Ticket
-    Product <|--Publication
+    Product <|-- Ticket
+    Product <|-- Publication
     Publication <|-- Book
     Publication <|-- Magazine
     Magazine <|-- DiscMag
     SaleableItem <|.. Product
     Serializable <|.. Product
     Cart "0..*" --> "0..*" Product : contains
+    Order "0..*" --> "0..*" Product : contains
 
     class Product{
         -String productId
@@ -19,11 +20,13 @@ classDiagram
     class Serializable{
         <<interface>>
     }
+
     class Ticket{
         +description
 
         +sellItem()
     }
+
     class Publication{
         <<Abstract>>
         -String title
@@ -34,12 +37,11 @@ classDiagram
         +toString()
         +equals()
         +hashCode()
-
     }
-    class Book{
-         -String isbn
-         -String author
 
+    class Book{
+        -String isbn
+        -String author
 
         +Book()
         +Book(String author)
@@ -47,35 +49,57 @@ classDiagram
         +toString()
         +equals()
         +hashCode()
-
     }
+
     class Magazine{
         -int orderQty
         -java.util.Date currentIssue
 
         +Magazine()
         +Magazine(int orderQty, Date currentIssue, String title, double price, int copies)
-
     }
+
     class DiscMag{
         -boolean hasDisc
 
         +DiscMag()
-        +DiscMag(boolean, hasDisc, int orderQty, Date currentIssue, String title, double price, int copies)
-
+        +DiscMag(boolean hasDisc, int orderQty, Date currentIssue, String title, double price, int copies)
     }
 
     class SaleableItem {
         <<interface>>
         +sellItem()
         +getPrice()
-
     }
 
     class Cart{
-        -Long id
-        -List items
+        -List~Product~ items
+
+        +Cart()
+        +Cart(List~Product~ items)
         +addItem(Product item)
         +getItems()
-        +setItems(List items)
+        +setItems(List~Product~ items)
+        +toString()
+        +equals()
+        +hashCode()
+    }
+
+    class Order{
+        -double totalAmount
+        -LocalDateTime orderDate
+        -List~Product~ products
+
+        +Order()
+        +Order(double totalAmount, LocalDateTime orderDate, List~Product~ products)
+        +addProduct(Product product)
+        +getTotalAmount()
+        +setTotalAmount(double totalAmount)
+        +getOrderDate()
+        +setOrderDate(LocalDateTime orderDate)
+        +getProducts()
+        +setProducts(List~Product~ products)
+        +toString()
+        +equals()
+        +hashCode()
     }
