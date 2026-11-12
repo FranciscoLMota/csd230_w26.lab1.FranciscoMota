@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
     @ExceptionHandler({
+            AlbumNotFoundException.class,
             BookNotFoundException.class,
             MagazineNotFoundException.class,
             DiscMagNotFoundException.class,

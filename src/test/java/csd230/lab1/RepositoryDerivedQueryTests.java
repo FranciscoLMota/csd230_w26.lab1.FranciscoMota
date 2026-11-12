@@ -1,8 +1,10 @@
 package csd230.lab1;
 
+import csd230.lab1.entities.AlbumEntity;
 import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.DiscMagEntity;
 import csd230.lab1.entities.TicketEntity;
+import csd230.lab1.repositories.AlbumEntityRepository;
 import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.DiscMagRepository;
 import csd230.lab1.repositories.TicketRepository;
@@ -20,9 +22,23 @@ import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = NONE)
 class RepositoryDerivedQueryTests {
 
+    @Autowired private AlbumEntityRepository albumEntityRepository;
     @Autowired private BookEntityRepository bookEntityRepository;
     @Autowired private DiscMagRepository discMagRepository;
     @Autowired private TicketRepository ticketRepository;
+
+    @Test
+    void findsAlbumsByMusicalMetadata() {
+        AlbumEntity album = albumEntityRepository.saveAndFlush(
+                new AlbumEntity("Rumours", 29.99, 4, "Fleetwood Mac",
+                        "Rock", "Warner Bros.", 1977));
+
+        assertThat(albumEntityRepository.findByTitle("Rumours")).containsExactly(album);
+        assertThat(albumEntityRepository.findByArtist("Fleetwood Mac")).containsExactly(album);
+        assertThat(albumEntityRepository.findByGenre("Rock")).containsExactly(album);
+        assertThat(albumEntityRepository.findByReleaseYear(1977)).containsExactly(album);
+        assertThat(albumEntityRepository.searchByArtist("fleetwood")).containsExactly(album);
+    }
 
     @Test
     void findsBooksByExactAndPartialTitle() {

@@ -1,8 +1,10 @@
 package csd230.lab1;
 
+import csd230.lab1.entities.AlbumEntity;
 import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.CartEntity;
 import csd230.lab1.entities.TicketEntity;
+import csd230.lab1.repositories.AlbumEntityRepository;
 import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.TicketRepository;
@@ -18,9 +20,33 @@ import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = NONE)
 class RepositoryCrudTests {
 
+    @Autowired private AlbumEntityRepository albumEntityRepository;
     @Autowired private BookEntityRepository bookEntityRepository;
     @Autowired private CartEntityRepository cartEntityRepository;
     @Autowired private TicketRepository ticketRepository;
+
+    @Test
+    void albumRepositorySupportsCrud() {
+        AlbumEntity album = albumEntityRepository.saveAndFlush(
+                new AlbumEntity("Kind of Blue", 24.99, 5, "Miles Davis",
+                        "Jazz", "Columbia Records", 1959));
+        Long albumId = album.getId();
+
+        assertThat(albumId).isNotNull();
+        assertThat(albumEntityRepository.findById(albumId)).contains(album);
+
+        album.setCopies(8);
+        album.setPrice(21.99);
+        albumEntityRepository.saveAndFlush(album);
+        assertThat(albumEntityRepository.findById(albumId)).get().satisfies(savedAlbum -> {
+            assertThat(savedAlbum.getCopies()).isEqualTo(8);
+            assertThat(savedAlbum.getPrice()).isEqualTo(21.99);
+        });
+
+        albumEntityRepository.deleteById(albumId);
+        albumEntityRepository.flush();
+        assertThat(albumEntityRepository.existsById(albumId)).isFalse();
+    }
 
     @Test
     void ticketRepositorySupportsCrud() {

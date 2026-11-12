@@ -63,6 +63,18 @@ public class Application implements CommandLineRunner {
 			productRepository.save(book);
 		}
 
+		for (int i = 0; i < 6; i++) {
+			AlbumEntity album = new AlbumEntity(
+					cm.productName(),
+					Double.parseDouble(cm.price()),
+					number.numberBetween(5, 30),
+					faker.rockBand().name(),
+					faker.music().genre(),
+					faker.company().name(),
+					number.numberBetween(1960, LocalDateTime.now().getYear() + 1));
+			productRepository.save(album);
+		}
+
 		for (int i = 0; i < 10; i++) {
 			productRepository.save(new MagazineEntity(
 					cm.department() + " Magazine",

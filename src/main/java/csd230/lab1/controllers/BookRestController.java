@@ -49,6 +49,7 @@ public class BookRestController {
                 .map(book -> {
                     book.setTitle(newBook.getTitle());
                     book.setAuthor(newBook.getAuthor());
+                    book.setIsbn(newBook.getIsbn());
                     book.setPrice(newBook.getPrice());
                     book.setCopies(newBook.getCopies());
                     return repository.save(book);
