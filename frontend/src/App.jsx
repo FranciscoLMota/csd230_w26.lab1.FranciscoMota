@@ -111,7 +111,6 @@ function CatalogApp() {
             <Route path="/" element={<HomePage products={inventoryPages} />} />
             <Route path="/inventory/album" element={<AlbumsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
             <Route path="/inventory/book" element={<BooksPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
-            <Route path="/add" element={isAdmin ? <BooksPage directAdd canManage={isAdmin} /> : <p role="alert">Administrator access is required.</p>} />
             <Route path="/inventory/discmag" element={<DiscMagsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
             <Route path="/inventory/magazine" element={<MagazinesPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
             <Route path="/inventory/ticket" element={<TicketsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
