@@ -3,7 +3,7 @@ import AddMagazineForm from '../components/magazine/AddMagazineForm.jsx';
 import FormModal from '../components/FormModal.jsx';
 import MagazineList from '../components/magazine/MagazineList.jsx';
 
-export default function MagazinesPage({ onAddToCart, cartPending }) {
+export default function MagazinesPage({ onAddToCart, cartPending, canManage }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -14,7 +14,7 @@ export default function MagazinesPage({ onAddToCart, cartPending }) {
 
   return (
     <>
-      <MagazineList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} />
+      <MagazineList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} canManage={canManage} />
       <FormModal isOpen={showAddForm} onClose={() => setShowAddForm(false)}>
         <AddMagazineForm onMagazineAdded={handleMagazineAdded} />
       </FormModal>

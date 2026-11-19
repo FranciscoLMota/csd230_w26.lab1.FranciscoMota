@@ -54,7 +54,7 @@ function SignedInCatalogApp() {
 function CatalogApp() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { logout, token } = useAuth();
+  const { logout, token, isAdmin } = useAuth();
   const isCurrent = useCallback(() => localStorage.getItem('token') === token, [token]);
   const [cart, setCart] = useState(null);
   const [cartLoading, setCartLoading] = useState(true);
@@ -92,6 +92,7 @@ function CatalogApp() {
         <Link className="justify-self-start font-semibold text-zinc-200 transition hover:text-indigo-400" to="/">The Catalog</Link>
         <p className="hidden justify-self-center text-sm text-zinc-400 sm:block">Product management</p>
         <div className="flex items-center justify-self-end gap-2">
+          {isAdmin && <Link className="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-indigo-400" to="/add">Add Book</Link>}
           <Link className="border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 transition hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-indigo-400" to="/cart">Cart ({cart?.products?.length ?? 0})</Link>
           <button className="cursor-pointer border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 transition hover:border-red-500/60 hover:bg-red-500/10 hover:text-red-400" type="button" onClick={() => { logout(); navigate('/login', { replace: true }); }}>Logout</button>
         </div>
@@ -109,9 +110,10 @@ function CatalogApp() {
           <Routes>
             <Route path="/" element={<HomePage products={inventoryPages} />} />
             <Route path="/inventory/album" element={<AlbumsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
-            <Route path="/inventory/book" element={<BooksPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
+            <Route path="/inventory/book" element={<BooksPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
+            <Route path="/add" element={isAdmin ? <BooksPage directAdd canManage={isAdmin} /> : <p role="alert">Administrator access is required.</p>} />
             <Route path="/inventory/discmag" element={<DiscMagsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
-            <Route path="/inventory/magazine" element={<MagazinesPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
+            <Route path="/inventory/magazine" element={<MagazinesPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
             <Route path="/inventory/ticket" element={<TicketsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
             <Route path="/cart" element={<DisplayCart cart={cart} loading={cartLoading} error={cartError} pending={cartPending} onRemove={productId => changeCart(productId, true)} />} />
             <Route path="*" element={<NotFoundPage />} />

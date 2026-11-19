@@ -14,7 +14,7 @@ function draftFrom(book) {
   };
 }
 
-export default function Book({ book, onDelete, onUpdate, onAddToCart, cartPending }) {
+export default function Book({ book, onDelete, onUpdate, onAddToCart, cartPending, canManage }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(() => draftFrom(book));
   const [saving, setSaving] = useState(false);
@@ -134,20 +134,20 @@ export default function Book({ book, onDelete, onUpdate, onAddToCart, cartPendin
             </>
           ) : (
             <>
-              <button
+              {canManage && <button
                 className="cursor-pointer border border-indigo-500/50 px-3 py-1.5 text-xs font-medium text-indigo-400 transition hover:bg-indigo-500/10"
                 type="button"
                 onClick={() => setEditing(true)}
               >
                 Edit
-              </button>
-              <button
+              </button>}
+              {canManage && <button
                 className="cursor-pointer border border-red-500/40 px-3 py-1.5 text-xs font-medium text-red-400 transition hover:bg-red-500/10"
                 type="button"
                 onClick={() => onDelete(book)}
               >
                 Delete
-              </button>
+              </button>}
             </>
           )}
         </div>

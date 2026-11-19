@@ -15,7 +15,7 @@ function draftFrom(magazine) {
   };
 }
 
-export default function Magazine({ magazine, onDelete, onUpdate, onAddToCart, cartPending }) {
+export default function Magazine({ magazine, onDelete, onUpdate, onAddToCart, cartPending, canManage }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(() => draftFrom(magazine));
   const [saving, setSaving] = useState(false);
@@ -80,7 +80,7 @@ export default function Magazine({ magazine, onDelete, onUpdate, onAddToCart, ca
               className={inputClasses}
               min={type === "number" ? "0" : undefined}
               name={name}
-              step={name === "price" ? "0.01" : undefined}
+              step={name === "price" ? "0.01" : name === "currentIssue" ? "1" : undefined}
               type={type}
               value={draft[name]}
               onChange={updateField}
@@ -113,21 +113,21 @@ export default function Magazine({ magazine, onDelete, onUpdate, onAddToCart, ca
             </>
           ) : (
             <>
-              <button
+              {canManage && <button
                 className="cursor-pointer border border-emerald-500/50 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10 disabled:cursor-wait disabled:opacity-60"
                 type="button"
                 onClick={() => onAddToCart(magazine.id)}
                 disabled={cartPending}
               >
                 Add to Cart
-              </button>
-              <button
+              </button>}
+              {canManage && <button
                 className="cursor-pointer border border-indigo-500/50 px-3 py-1.5 text-xs font-medium text-indigo-400 transition hover:bg-indigo-500/10"
                 type="button"
                 onClick={() => setEditing(true)}
               >
                 Edit
-              </button>
+              </button>}
               <button
                 className="cursor-pointer border border-red-500/40 px-3 py-1.5 text-xs font-medium text-red-400 transition hover:bg-red-500/10"
                 type="button"

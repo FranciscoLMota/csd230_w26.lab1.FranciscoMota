@@ -4,7 +4,7 @@ import Book from "./Book.jsx";
 import ConfirmModal from "../ConfirmModal.jsx";
 import useAuth from "../../useAuth.js";
 
-export default function BookList({ onAdd, onAddToCart, cartPending }) {
+export default function BookList({ onAdd, onAddToCart, cartPending, canManage }) {
   const { token } = useAuth();
   const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [books, setBooks] = useState([]);
@@ -75,13 +75,13 @@ export default function BookList({ onAdd, onAddToCart, cartPending }) {
               : `${books.length} ${books.length === 1 ? "book" : "books"} in the catalog`}
           </p>
         </div>
-        <button
+        {canManage && <button
           className="shrink-0 cursor-pointer border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-indigo-500 hover:bg-indigo-500"
           type="button"
           onClick={onAdd}
         >
           + Add Book
-        </button>
+        </button>}
       </div>
 
       {error && (
@@ -127,6 +127,7 @@ export default function BookList({ onAdd, onAddToCart, cartPending }) {
                   onUpdate={handleUpdateBook}
                   onAddToCart={onAddToCart}
                   cartPending={cartPending}
+                  canManage={canManage}
                 />
               ))}
             </tbody>

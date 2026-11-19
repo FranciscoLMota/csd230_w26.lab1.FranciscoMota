@@ -4,8 +4,8 @@ import ConfirmModal from "../ConfirmModal.jsx";
 import Magazine from "./Magazine.jsx";
 import useAuth from "../../useAuth.js";
 
-export default function MagazineList({ onAdd, onAddToCart, cartPending }) {
-  const { token } = useAuth();
+export default function MagazineList({ onAdd, onAddToCart, cartPending, canManage }) {
+  const { token, isAdmin } = useAuth();
   const isCurrent = useCallback(
     () => localStorage.getItem("token") === token,
     [token],
@@ -82,13 +82,13 @@ export default function MagazineList({ onAdd, onAddToCart, cartPending }) {
               : `${magazines.length} ${magazines.length === 1 ? "magazine" : "magazines"} in the catalog`}
           </p>
         </div>
-        <button
+        {isAdmin && <button
           className="shrink-0 cursor-pointer border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-indigo-500 hover:bg-indigo-500"
           type="button"
           onClick={onAdd}
         >
           + Add Magazine
-        </button>
+        </button>}
       </div>
       {error && (
         <p
@@ -132,6 +132,7 @@ export default function MagazineList({ onAdd, onAddToCart, cartPending }) {
                   onUpdate={handleUpdateMagazine}
                   onAddToCart={onAddToCart}
                   cartPending={cartPending}
+                  canManage={isAdmin}
                 />
               ))}
             </tbody>
