@@ -16,7 +16,7 @@ function draftFrom(album) {
   };
 }
 
-export default function Album({ album, onDelete, onUpdate }) {
+export default function Album({ album, onDelete, onUpdate, onAddToCart, cartPending }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(() => draftFrom(album));
   const [saving, setSaving] = useState(false);
@@ -116,6 +116,7 @@ export default function Album({ album, onDelete, onUpdate }) {
             </>
           ) : (
             <>
+              <button className="cursor-pointer border border-emerald-500/50 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10 disabled:cursor-wait disabled:opacity-60" type="button" onClick={() => onAddToCart(album.id)} disabled={cartPending}>Add to Cart</button>
               <button
                 className="cursor-pointer border border-indigo-500/50 px-3 py-1.5 text-xs font-medium text-indigo-400 transition hover:bg-indigo-500/10"
                 type="button"

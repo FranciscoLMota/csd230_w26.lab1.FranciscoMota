@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../api.js";
+import useAuth from "../../useAuth.js";
 import ConfirmModal from "../ConfirmModal.jsx";
 import Ticket from "./Ticket.jsx";
 
-export default function TicketList({ onAdd }) {
+export default function TicketList({ onAdd, onAddToCart, cartPending }) {
+  const { token } = useAuth();
+  const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,38 +17,40 @@ export default function TicketList({ onAdd }) {
     api
       .get("/tickets")
       .then((response) => {
-        if (active) setTickets(response.data);
+        if (active && isCurrent()) setTickets(response.data);
       })
       .catch((err) => {
-        if (active) setError(err.message);
+        if (active && isCurrent()) setError(err.message);
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active && isCurrent()) setLoading(false);
       });
     return () => {
       active = false;
     };
-  }, []);
-  async function handleDelete(id) {
+  }, [isCurrent]);
+  async function handleDeleteTicket(id) {
     setError("");
     setDeleting(true);
     try {
       await api.delete(`/tickets/${id}`);
+      if (!isCurrent()) return;
       setTickets((previous) => previous.filter((item) => item.id !== id));
       setItemToDelete(null);
     } catch (err) {
-      setError(err.message);
+      if (isCurrent()) setError(err.message);
     } finally {
       setDeleting(false);
     }
   }
-  async function handleUpdate(id, item) {
-    const response = await api.put(`/tickets/${id}`, item);
-    const saved = response.data;
+  async function handleUpdateTicket(id, ticket) {
+    const response = await api.put(`/tickets/${id}`, ticket);
+    if (!isCurrent()) return;
+    const savedTicket = response.data;
     setTickets((previous) =>
-      previous.map((current) => (current.id === id ? saved : current)),
+      previous.map((current) => (current.id === id ? savedTicket : current)),
     );
-    return saved;
+    return savedTicket;
   }
   return (
     <section
@@ -104,12 +109,14 @@ export default function TicketList({ onAdd }) {
               </tr>
             </thead>
             <tbody>
-              {tickets.map((item) => (
-                <Ticket
-                  ticket={item}
-                  key={item.id}
+          {tickets.map((ticket) => (
+            <Ticket
+              ticket={ticket}
+              key={ticket.id}
                   onDelete={setItemToDelete}
-                  onUpdate={handleUpdate}
+                  onUpdate={handleUpdateTicket}
+                  onAddToCart={onAddToCart}
+                  cartPending={cartPending}
                 />
               ))}
             </tbody>
@@ -123,7 +130,7 @@ export default function TicketList({ onAdd }) {
         confirmLabel="Delete Ticket"
         busy={deleting}
         onCancel={() => setItemToDelete(null)}
-        onConfirm={() => handleDelete(itemToDelete.id)}
+        onConfirm={() => handleDeleteTicket(itemToDelete.id)}
       />
     </section>
   );

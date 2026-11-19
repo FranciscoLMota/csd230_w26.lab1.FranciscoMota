@@ -10,6 +10,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler({
             AlbumNotFoundException.class,
             BookNotFoundException.class,
+            CartNotFoundException.class,
             MagazineNotFoundException.class,
             DiscMagNotFoundException.class,
             TicketNotFoundException.class

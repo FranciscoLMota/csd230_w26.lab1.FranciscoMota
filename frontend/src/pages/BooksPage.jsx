@@ -3,7 +3,7 @@ import AddBookForm from '../components/book/AddBookForm.jsx';
 import BookList from '../components/book/BookList.jsx';
 import FormModal from '../components/FormModal.jsx';
 
-export default function BooksPage() {
+export default function BooksPage({ onAddToCart, cartPending }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -14,7 +14,7 @@ export default function BooksPage() {
 
   return (
     <>
-      <BookList key={refreshKey} onAdd={() => setShowAddForm(true)} />
+      <BookList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} />
       <FormModal isOpen={showAddForm} onClose={() => setShowAddForm(false)}>
         <AddBookForm onBookAdded={handleBookAdded} />
       </FormModal>

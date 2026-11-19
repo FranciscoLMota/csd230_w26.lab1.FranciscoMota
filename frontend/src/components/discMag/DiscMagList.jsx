@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../api.js";
+import useAuth from "../../useAuth.js";
 import ConfirmModal from "../ConfirmModal.jsx";
 import DiscMag from "./DiscMag.jsx";
 
-export default function DiscMagList({ onAdd }) {
+export default function DiscMagList({ onAdd, onAddToCart, cartPending }) {
+  const { token } = useAuth();
+  const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [discMags, setDiscMags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,38 +17,40 @@ export default function DiscMagList({ onAdd }) {
     api
       .get("/discmags")
       .then((response) => {
-        if (active) setDiscMags(response.data);
+        if (active && isCurrent()) setDiscMags(response.data);
       })
       .catch((err) => {
-        if (active) setError(err.message);
+        if (active && isCurrent()) setError(err.message);
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active && isCurrent()) setLoading(false);
       });
     return () => {
       active = false;
     };
-  }, []);
-  async function handleDelete(id) {
+  }, [isCurrent]);
+  async function handleDeleteDiscMag(id) {
     setError("");
     setDeleting(true);
     try {
       await api.delete(`/discmags/${id}`);
+      if (!isCurrent()) return;
       setDiscMags((previous) => previous.filter((item) => item.id !== id));
       setItemToDelete(null);
     } catch (err) {
-      setError(err.message);
+      if (isCurrent()) setError(err.message);
     } finally {
       setDeleting(false);
     }
   }
-  async function handleUpdate(id, item) {
-    const response = await api.put(`/discmags/${id}`, item);
-    const saved = response.data;
+  async function handleUpdateDiscMag(id, discMag) {
+    const response = await api.put(`/discmags/${id}`, discMag);
+    if (!isCurrent()) return;
+    const savedDiscMag = response.data;
     setDiscMags((previous) =>
-      previous.map((current) => (current.id === id ? saved : current)),
+      previous.map((current) => (current.id === id ? savedDiscMag : current)),
     );
-    return saved;
+    return savedDiscMag;
   }
   return (
     <section
@@ -113,12 +118,14 @@ export default function DiscMagList({ onAdd }) {
               </tr>
             </thead>
             <tbody>
-              {discMags.map((item) => (
-                <DiscMag
-                  discMag={item}
-                  key={item.id}
+          {discMags.map((discMag) => (
+            <DiscMag
+              discMag={discMag}
+              key={discMag.id}
                   onDelete={setItemToDelete}
-                  onUpdate={handleUpdate}
+                  onUpdate={handleUpdateDiscMag}
+                  onAddToCart={onAddToCart}
+                  cartPending={cartPending}
                 />
               ))}
             </tbody>
@@ -132,7 +139,7 @@ export default function DiscMagList({ onAdd }) {
         confirmLabel="Delete Disc Mag"
         busy={deleting}
         onCancel={() => setItemToDelete(null)}
-        onConfirm={() => handleDelete(itemToDelete.id)}
+        onConfirm={() => handleDeleteDiscMag(itemToDelete.id)}
       />
     </section>
   );

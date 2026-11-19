@@ -18,6 +18,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter; // NEW
 import jakarta.servlet.http.HttpServletResponse; // NEW
 import org.springframework.http.HttpStatus; // NEW
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -68,7 +73,15 @@ public class WebSecurityConfig {
 //                        .anyRequest().authenticated()
 
                         // TEMPORARY: early React exercises only; restore protection in 2.12
-                        .requestMatchers("/**").permitAll()
+                                .requestMatchers("/api/rest/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/rest/carts/mine").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/rest/carts/mine/products/*").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/rest/carts/mine/products/*").hasAnyRole("USER", "ADMIN")
+                                // Original whole-cart CRUD is administrative, including list/by-ID reads.
+                                .requestMatchers("/api/rest/carts", "/api/rest/carts/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/api/rest/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/rest/**").hasRole("ADMIN")
                 )
                 // REST API Error Handling:
                 // If the URL starts with /api/rest/, return 401. Otherwise, redirect to /login.
@@ -76,8 +89,19 @@ public class WebSecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             if (request.getRequestURI().startsWith("/api/rest/")) {
                                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"message\":\"Authentication required\"}");
                             } else {
                                 response.sendRedirect("/login");
+                            }
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            if (request.getRequestURI().startsWith("/api/rest/")) {
+                                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                response.setContentType("application/json");
+                                response.getWriter().write("{\"message\":\"Access denied\"}");
+                            } else {
+                                response.sendError(HttpServletResponse.SC_FORBIDDEN);
                             }
                         })
                 )
@@ -93,6 +117,7 @@ public class WebSecurityConfig {
                         .permitAll()
                 );
 
+        http.cors(Customizer.withDefaults());
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/rest/**"));
 
@@ -102,6 +127,19 @@ public class WebSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

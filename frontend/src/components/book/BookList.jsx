@@ -1,9 +1,12 @@
 import api from "../../api.js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Book from "./Book.jsx";
 import ConfirmModal from "../ConfirmModal.jsx";
+import useAuth from "../../useAuth.js";
 
-export default function BookList({ onAdd }) {
+export default function BookList({ onAdd, onAddToCart, cartPending }) {
+  const { token } = useAuth();
+  const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -15,36 +18,42 @@ export default function BookList({ onAdd }) {
     api
       .get("/books")
       .then((response) => {
-        if (active) setBooks(response.data);
+        if (active && isCurrent()) setBooks(response.data);
       })
       .catch((err) => {
-        if (active) setError(err.message);
+        if (active && isCurrent()) setError(err.message);
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active && isCurrent()) setLoading(false);
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [isCurrent]);
 
   async function handleDeleteBook(id) {
-    if (!window.confirm("Delete this book?")) return;
     setError("");
+    setDeleting(true);
     try {
       await api.delete(`/books/${id}`);
+      if (!isCurrent()) return;
       setBooks((previous) => previous.filter((book) => book.id !== id));
+      setBookToDelete(null);
     } catch (err) {
-      setError(err.message);
+      if (isCurrent()) setError(err.message);
+    } finally {
+      setDeleting(false);
     }
   }
 
   async function handleUpdateBook(id, data) {
     const response = await api.put(`/books/${id}`, data);
+    if (!isCurrent()) return;
     const savedBook = response.data;
     setBooks((previous) =>
       previous.map((book) => (book.id === id ? savedBook : book)),
     );
+    return savedBook;
   }
 
   return (
@@ -116,6 +125,8 @@ export default function BookList({ onAdd }) {
                   key={book.id}
                   onDelete={setBookToDelete}
                   onUpdate={handleUpdateBook}
+                  onAddToCart={onAddToCart}
+                  cartPending={cartPending}
                 />
               ))}
             </tbody>

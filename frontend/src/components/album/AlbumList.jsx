@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../api.js";
+import useAuth from "../../useAuth.js";
 import Album from "./Album.jsx";
 import ConfirmModal from "../ConfirmModal.jsx";
 
-export default function AlbumList({ onAdd }) {
+export default function AlbumList({ onAdd, onAddToCart, cartPending }) {
+  const { token } = useAuth();
+  const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -15,28 +18,29 @@ export default function AlbumList({ onAdd }) {
     api
       .get("/albums")
       .then((response) => {
-        if (active) setAlbums(response.data);
+        if (active && isCurrent()) setAlbums(response.data);
       })
       .catch((err) => {
-        if (active) setError(err.message);
+        if (active && isCurrent()) setError(err.message);
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active && isCurrent()) setLoading(false);
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [isCurrent]);
 
   async function handleDeleteAlbum(id) {
     setError("");
     setDeleting(true);
     try {
       await api.delete(`/albums/${id}`);
+      if (!isCurrent()) return;
       setAlbums((previous) => previous.filter((album) => album.id !== id));
       setAlbumToDelete(null);
     } catch (err) {
-      setError(err.message);
+      if (isCurrent()) setError(err.message);
     } finally {
       setDeleting(false);
     }
@@ -44,6 +48,7 @@ export default function AlbumList({ onAdd }) {
 
   async function handleUpdateAlbum(id, updatedAlbum) {
     const response = await api.put(`/albums/${id}`, updatedAlbum);
+    if (!isCurrent()) return;
     const savedAlbum = response.data;
     setAlbums((previous) =>
       previous.map((album) => (album.id === id ? savedAlbum : album)),
@@ -116,6 +121,8 @@ export default function AlbumList({ onAdd }) {
                   key={album.id}
                   onDelete={setAlbumToDelete}
                   onUpdate={handleUpdateAlbum}
+                  onAddToCart={onAddToCart}
+                  cartPending={cartPending}
                 />
               ))}
             </tbody>

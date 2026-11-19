@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../api.js";
 import ConfirmModal from "../ConfirmModal.jsx";
 import Magazine from "./Magazine.jsx";
+import useAuth from "../../useAuth.js";
 
-export default function MagazineList({ onAdd }) {
+export default function MagazineList({ onAdd, onAddToCart, cartPending }) {
+  const { token } = useAuth();
+  const isCurrent = useCallback(
+    () => localStorage.getItem("token") === token,
+    [token],
+  );
   const [magazines, setMagazines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -15,30 +21,31 @@ export default function MagazineList({ onAdd }) {
     api
       .get("/magazines")
       .then((response) => {
-        if (active) setMagazines(response.data);
+        if (active && isCurrent()) setMagazines(response.data);
       })
       .catch((err) => {
-        if (active) setError(err.message);
+        if (active && isCurrent()) setError(err.message);
       })
       .finally(() => {
-        if (active) setLoading(false);
+        if (active && isCurrent()) setLoading(false);
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [isCurrent]);
 
   async function handleDeleteMagazine(id) {
     setError("");
     setDeleting(true);
     try {
       await api.delete(`/magazines/${id}`);
+      if (!isCurrent()) return;
       setMagazines((previous) =>
         previous.filter((magazine) => magazine.id !== id),
       );
       setMagazineToDelete(null);
     } catch (err) {
-      setError(err.message);
+      if (isCurrent()) setError(err.message);
     } finally {
       setDeleting(false);
     }
@@ -46,6 +53,7 @@ export default function MagazineList({ onAdd }) {
 
   async function handleUpdateMagazine(id, updatedMagazine) {
     const response = await api.put(`/magazines/${id}`, updatedMagazine);
+    if (!isCurrent()) return;
     const savedMagazine = response.data;
     setMagazines((previous) =>
       previous.map((magazine) =>
@@ -122,6 +130,8 @@ export default function MagazineList({ onAdd }) {
                   magazine={magazine}
                   onDelete={setMagazineToDelete}
                   onUpdate={handleUpdateMagazine}
+                  onAddToCart={onAddToCart}
+                  cartPending={cartPending}
                 />
               ))}
             </tbody>

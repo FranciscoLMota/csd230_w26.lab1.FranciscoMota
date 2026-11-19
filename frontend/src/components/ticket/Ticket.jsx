@@ -9,7 +9,7 @@ const draftFrom = (ticket) => ({
   price: ticket.price,
 });
 
-export default function Ticket({ ticket, onDelete, onUpdate }) {
+export default function Ticket({ ticket, onDelete, onUpdate, onAddToCart, cartPending }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(() => draftFrom(ticket));
   const [saving, setSaving] = useState(false);
@@ -75,6 +75,7 @@ export default function Ticket({ ticket, onDelete, onUpdate }) {
         <div className="flex justify-end gap-2">
           {editing ? (
             <>
+              <button className="cursor-pointer border border-emerald-500/50 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10 disabled:cursor-wait disabled:opacity-60" type="button" onClick={() => onAddToCart(ticket.id)} disabled={cartPending}>Add to Cart</button>
               <button
                 className="cursor-pointer border border-zinc-700 px-3 py-1.5 text-xs"
                 type="button"

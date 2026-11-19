@@ -3,7 +3,7 @@ import AddDiscMagForm from '../components/discMag/AddDiscMagForm.jsx';
 import DiscMagList from '../components/discMag/DiscMagList.jsx';
 import FormModal from '../components/FormModal.jsx';
 
-export default function DiscMagsPage() {
+export default function DiscMagsPage({ onAddToCart, cartPending }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -13,7 +13,7 @@ export default function DiscMagsPage() {
   }
 
   return <>
-    <DiscMagList key={refreshKey} onAdd={() => setShowAddForm(true)} />
+    <DiscMagList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} />
     <FormModal isOpen={showAddForm} onClose={() => setShowAddForm(false)}>
       <AddDiscMagForm onDiscMagAdded={handleDiscMagAdded} />
     </FormModal>
