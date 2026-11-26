@@ -4,7 +4,7 @@ import useAuth from "../../useAuth.js";
 import Album from "./Album.jsx";
 import ConfirmModal from "../ConfirmModal.jsx";
 
-export default function AlbumList({ onAdd, onAddToCart, cartPending }) {
+export default function AlbumList({ onAdd, onAddToCart, cartPending, canManage }) {
   const { token } = useAuth();
   const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [albums, setAlbums] = useState([]);
@@ -75,13 +75,13 @@ export default function AlbumList({ onAdd, onAddToCart, cartPending }) {
               : `${albums.length} ${albums.length === 1 ? "album" : "albums"} in the catalog`}
           </p>
         </div>
-        <button
+        {canManage && <button
           className="shrink-0 cursor-pointer border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-indigo-500 hover:bg-indigo-500"
           type="button"
           onClick={onAdd}
         >
           + Add Album
-        </button>
+        </button>}
       </div>
       {error && (
         <p
@@ -123,6 +123,7 @@ export default function AlbumList({ onAdd, onAddToCart, cartPending }) {
                   onUpdate={handleUpdateAlbum}
                   onAddToCart={onAddToCart}
                   cartPending={cartPending}
+                  canManage={canManage}
                 />
               ))}
             </tbody>

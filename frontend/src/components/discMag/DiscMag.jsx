@@ -13,7 +13,7 @@ const draftFrom = (item) => ({
   hasDisc: item.hasDisc,
 });
 
-export default function DiscMag({ discMag, onDelete, onUpdate, onAddToCart, cartPending }) {
+export default function DiscMag({ discMag, onDelete, onUpdate, onAddToCart, cartPending, canManage }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(() => draftFrom(discMag));
   const [saving, setSaving] = useState(false);
@@ -107,39 +107,40 @@ export default function DiscMag({ discMag, onDelete, onUpdate, onAddToCart, cart
           {editing ? (
             <>
               <button className="cursor-pointer border border-emerald-500/50 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10 disabled:cursor-wait disabled:opacity-60" type="button" onClick={() => onAddToCart(discMag.id)} disabled={cartPending}>Add to Cart</button>
-              <button
+              {canManage && <button
                 className="cursor-pointer border border-zinc-700 px-3 py-1.5 text-xs"
                 type="button"
                 onClick={cancelEditing}
                 disabled={saving}
               >
                 Cancel
-              </button>
-              <button
+              </button>}
+              {canManage && <button
                 className="cursor-pointer border border-indigo-600 bg-indigo-600 px-3 py-1.5 text-xs"
                 type="button"
                 onClick={saveDiscMag}
                 disabled={saving}
               >
                 {saving ? "Saving..." : "Save"}
-              </button>
+              </button>}
             </>
           ) : (
             <>
-              <button
+              <button className="cursor-pointer border border-emerald-500/50 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10 disabled:cursor-wait disabled:opacity-60" type="button" onClick={() => onAddToCart(discMag.id)} disabled={cartPending}>Add to Cart</button>
+              {canManage && <button
                 className="cursor-pointer border border-indigo-500/50 px-3 py-1.5 text-xs text-indigo-400"
                 type="button"
                 onClick={() => setEditing(true)}
               >
                 Edit
-              </button>
-              <button
+              </button>}
+              {canManage && <button
                 className="cursor-pointer border border-red-500/40 px-3 py-1.5 text-xs text-red-400"
                 type="button"
                 onClick={() => onDelete(discMag)}
               >
                 Delete
-              </button>
+              </button>}
             </>
           )}
         </div>

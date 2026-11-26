@@ -3,7 +3,7 @@ import AddTicketForm from '../components/ticket/AddTicketForm.jsx';
 import FormModal from '../components/FormModal.jsx';
 import TicketList from '../components/ticket/TicketList.jsx';
 
-export default function TicketsPage({ onAddToCart, cartPending }) {
+export default function TicketsPage({ onAddToCart, cartPending, canManage }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -13,7 +13,7 @@ export default function TicketsPage({ onAddToCart, cartPending }) {
   }
 
   return <>
-    <TicketList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} />
+      <TicketList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} canManage={canManage} />
     <FormModal isOpen={showAddForm} onClose={() => setShowAddForm(false)}>
       <AddTicketForm onTicketAdded={handleTicketAdded} />
     </FormModal>

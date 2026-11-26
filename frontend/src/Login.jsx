@@ -10,6 +10,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [pending, setPending] = useState(false);
+    const reauthenticated = new URLSearchParams(window.location.search).get('reauth') === 'true';
     async function handleSubmit(event) {
         event.preventDefault(); setError(''); setPending(true);
         try {
@@ -29,6 +30,7 @@ export default function Login() {
                     <p className="mt-2 text-sm leading-6 text-zinc-400">Sign in to manage your product collection.</p>
                 </div>
                 <form className="grid gap-5 px-6 py-6 sm:px-8" onSubmit={handleSubmit}>
+                    {reauthenticated && <p className="border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300" role="alert">You were logged out because your session expired. Please sign in again.</p>}
                     <label className="grid gap-2 text-sm font-medium text-zinc-300">
                         <span>Username</span>
                         <input className="h-10.5 w-full border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition focus:border-indigo-500 focus:ring-3 focus:ring-indigo-500/10" autoComplete="username" value={username} onChange={e => setUsername(e.target.value)} required />
@@ -46,3 +48,5 @@ export default function Login() {
         </main>
     );
 }
+
+

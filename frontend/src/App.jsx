@@ -4,11 +4,11 @@ import api from './api.js';
 import AuthProvider from './AuthProvider.jsx';
 import Login from './Login.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
-import DisplayCart from './DisplayCart.jsx';
 import useAuth from './useAuth.js';
 import SideMenu from './components/SideMenu.jsx';
 import AlbumsPage from './pages/AlbumsPage.jsx';
 import BooksPage from './pages/BooksPage.jsx';
+import CartPage from './pages/CartPage.jsx';
 import DiscMagsPage from './pages/DiscMagsPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import MagazinesPage from './pages/MagazinesPage.jsx';
@@ -29,7 +29,8 @@ const pageDetails = {
   '/inventory/book': { label: 'Books', description: 'Manage your book collection.' },
   '/inventory/discmag': { label: 'Disc Mags', description: 'Manage your disc magazine collection.' },
   '/inventory/magazine': { label: 'Magazines', description: 'Manage your magazine collection.' },
-  '/inventory/ticket': { label: 'Tickets', description: 'Manage your ticket collection.' }
+  '/inventory/ticket': { label: 'Tickets', description: 'Manage your ticket collection.' },
+  '/cart': { label: 'Shopping Cart', description: 'Review the products in your cart.' }
 };
 
 export default function App() {
@@ -109,13 +110,13 @@ function CatalogApp() {
           </div>
           <Routes>
             <Route path="/" element={<HomePage products={inventoryPages} />} />
-            <Route path="/inventory/album" element={<AlbumsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
+            <Route path="/inventory/album" element={<AlbumsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
             <Route path="/inventory/book" element={<BooksPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
             <Route path="/add" element={isAdmin ? <BooksPage directAdd canManage={isAdmin} /> : <p role="alert">Administrator access is required.</p>} />
-            <Route path="/inventory/discmag" element={<DiscMagsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
+            <Route path="/inventory/discmag" element={<DiscMagsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
             <Route path="/inventory/magazine" element={<MagazinesPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
-            <Route path="/inventory/ticket" element={<TicketsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} />} />
-            <Route path="/cart" element={<DisplayCart cart={cart} loading={cartLoading} error={cartError} pending={cartPending} onRemove={productId => changeCart(productId, true)} />} />
+            <Route path="/inventory/ticket" element={<TicketsPage onAddToCart={changeCart} cartPending={cartLoading || cartPending} canManage={isAdmin} />} />
+            <Route path="/cart" element={<CartPage cart={cart} loading={cartLoading} error={cartError} pending={cartPending} onRemove={productId => changeCart(productId, true)} />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

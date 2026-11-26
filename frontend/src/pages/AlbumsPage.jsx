@@ -3,7 +3,7 @@ import AddAlbumForm from '../components/album/AddAlbumForm.jsx';
 import AlbumList from '../components/album/AlbumList.jsx';
 import FormModal from '../components/FormModal.jsx';
 
-export default function AlbumsPage({ onAddToCart, cartPending }) {
+export default function AlbumsPage({ onAddToCart, cartPending, canManage }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -14,7 +14,7 @@ export default function AlbumsPage({ onAddToCart, cartPending }) {
 
   return (
     <>
-      <AlbumList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} />
+      <AlbumList key={refreshKey} onAdd={() => setShowAddForm(true)} onAddToCart={onAddToCart} cartPending={cartPending} canManage={canManage} />
       <FormModal isOpen={showAddForm} onClose={() => setShowAddForm(false)}>
         <AddAlbumForm onAlbumAdded={handleAlbumAdded} />
       </FormModal>

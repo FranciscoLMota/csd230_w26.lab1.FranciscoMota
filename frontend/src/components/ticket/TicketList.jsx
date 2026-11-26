@@ -4,7 +4,7 @@ import useAuth from "../../useAuth.js";
 import ConfirmModal from "../ConfirmModal.jsx";
 import Ticket from "./Ticket.jsx";
 
-export default function TicketList({ onAdd, onAddToCart, cartPending }) {
+export default function TicketList({ onAdd, onAddToCart, cartPending, canManage }) {
   const { token } = useAuth();
   const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [tickets, setTickets] = useState([]);
@@ -71,13 +71,13 @@ export default function TicketList({ onAdd, onAddToCart, cartPending }) {
               : `${tickets.length} ${tickets.length === 1 ? "ticket" : "tickets"} in the catalog`}
           </p>
         </div>
-        <button
+        {canManage && <button
           className="shrink-0 cursor-pointer border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold"
           type="button"
           onClick={onAdd}
         >
-          + Add Ticket
-        </button>
+          '+ Add Ticket'
+        </button>}
       </div>
       {error && (
         <p
@@ -117,6 +117,7 @@ export default function TicketList({ onAdd, onAddToCart, cartPending }) {
                   onUpdate={handleUpdateTicket}
                   onAddToCart={onAddToCart}
                   cartPending={cartPending}
+                  canManage={canManage}
                 />
               ))}
             </tbody>

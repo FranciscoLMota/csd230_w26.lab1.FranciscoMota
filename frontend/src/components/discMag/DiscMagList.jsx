@@ -4,7 +4,7 @@ import useAuth from "../../useAuth.js";
 import ConfirmModal from "../ConfirmModal.jsx";
 import DiscMag from "./DiscMag.jsx";
 
-export default function DiscMagList({ onAdd, onAddToCart, cartPending }) {
+export default function DiscMagList({ onAdd, onAddToCart, cartPending, canManage }) {
   const { token } = useAuth();
   const isCurrent = useCallback(() => localStorage.getItem("token") === token, [token]);
   const [discMags, setDiscMags] = useState([]);
@@ -71,13 +71,13 @@ export default function DiscMagList({ onAdd, onAddToCart, cartPending }) {
               : `${discMags.length} ${discMags.length === 1 ? "disc mag" : "disc mags"} in the catalog`}
           </p>
         </div>
-        <button
+        {canManage && <button
           className="shrink-0 cursor-pointer border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold"
           type="button"
           onClick={onAdd}
         >
-          + Add Disc Mag
-        </button>
+           '+ Add Disc Mag'
+        </button>}
       </div>
       {error && (
         <p
@@ -126,6 +126,7 @@ export default function DiscMagList({ onAdd, onAddToCart, cartPending }) {
                   onUpdate={handleUpdateDiscMag}
                   onAddToCart={onAddToCart}
                   cartPending={cartPending}
+                  canManage={canManage}
                 />
               ))}
             </tbody>

@@ -1,10 +1,31 @@
 import { useEffect, useState } from 'react';
-import { hasRole } from './tokenRoles.js';
+import { hasRole, isTokenExpired } from './tokenRoles.js';
 import { AuthContext } from './AuthContext.js';
 
 
 export default function AuthProvider({ children }) {
-    const [token, setToken] = useState(() => localStorage.getItem('token'));
+    const [token, setToken] = useState(() => {
+        const stored = localStorage.getItem('token');
+        if (isTokenExpired(stored)) {
+            localStorage.removeItem('token');
+            return null;
+        }
+        return stored;
+    });
+
+    useEffect(() => {
+        if (!token) return undefined;
+        const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(token.split('.')[1].length / 4) * 4, '=')));
+        const timeout = window.setTimeout(() => {
+            localStorage.removeItem('token');
+            setToken(null);
+            window.dispatchEvent(new Event('auth:invalid'));
+            if (window.location.pathname !== '/login') {
+                window.location.replace('/login?reauth=true');
+            }
+        }, Math.max(0, payload.exp * 1000 - Date.now()));
+        return () => window.clearTimeout(timeout);
+    }, [token]);
 
     useEffect(() => {
         function invalidSession() { setToken(null); }

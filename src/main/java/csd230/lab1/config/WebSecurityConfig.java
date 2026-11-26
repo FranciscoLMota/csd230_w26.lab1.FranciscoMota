@@ -82,6 +82,9 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/rest/carts", "/api/rest/carts/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/rest/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/rest/**").hasRole("ADMIN")
+                                .requestMatchers("/login", "/register", "/", "/css/**", "/js/**").permitAll()
+                                .requestMatchers("/books/add", "/books/edit/**", "/books/delete/**", "/magazines/add", "/magazines/edit/**", "/magazines/delete/**", "/discmags/add", "/discmags/edit/**", "/discmags/delete/**", "/tickets/add", "/tickets/edit/**", "/tickets/delete/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
                 )
                 // REST API Error Handling:
                 // If the URL starts with /api/rest/, return 401. Otherwise, redirect to /login.
@@ -150,6 +153,8 @@ public class WebSecurityConfig {
         return authProvider;
     }
 }
+
+
 
 
 

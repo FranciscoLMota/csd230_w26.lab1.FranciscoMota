@@ -113,14 +113,14 @@ export default function Magazine({ magazine, onDelete, onUpdate, onAddToCart, ca
             </>
           ) : (
             <>
-              {canManage && <button
+              <button
                 className="cursor-pointer border border-emerald-500/50 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/10 disabled:cursor-wait disabled:opacity-60"
                 type="button"
                 onClick={() => onAddToCart(magazine.id)}
                 disabled={cartPending}
               >
                 Add to Cart
-              </button>}
+              </button>
               {canManage && <button
                 className="cursor-pointer border border-indigo-500/50 px-3 py-1.5 text-xs font-medium text-indigo-400 transition hover:bg-indigo-500/10"
                 type="button"
@@ -128,13 +128,13 @@ export default function Magazine({ magazine, onDelete, onUpdate, onAddToCart, ca
               >
                 Edit
               </button>}
-              <button
+              {canManage && <button
                 className="cursor-pointer border border-red-500/40 px-3 py-1.5 text-xs font-medium text-red-400 transition hover:bg-red-500/10"
                 type="button"
                 onClick={() => onDelete(magazine)}
               >
                 Delete
-              </button>
+              </button>}
             </>
           )}
         </div>

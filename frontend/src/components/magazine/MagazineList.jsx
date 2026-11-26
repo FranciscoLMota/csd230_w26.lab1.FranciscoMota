@@ -5,7 +5,7 @@ import Magazine from "./Magazine.jsx";
 import useAuth from "../../useAuth.js";
 
 export default function MagazineList({ onAdd, onAddToCart, cartPending, canManage }) {
-  const { token, isAdmin } = useAuth();
+  const { token } = useAuth();
   const isCurrent = useCallback(
     () => localStorage.getItem("token") === token,
     [token],
@@ -82,7 +82,7 @@ export default function MagazineList({ onAdd, onAddToCart, cartPending, canManag
               : `${magazines.length} ${magazines.length === 1 ? "magazine" : "magazines"} in the catalog`}
           </p>
         </div>
-        {isAdmin && <button
+        {canManage && <button
           className="shrink-0 cursor-pointer border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-indigo-500 hover:bg-indigo-500"
           type="button"
           onClick={onAdd}
@@ -132,7 +132,7 @@ export default function MagazineList({ onAdd, onAddToCart, cartPending, canManag
                   onUpdate={handleUpdateMagazine}
                   onAddToCart={onAddToCart}
                   cartPending={cartPending}
-                  canManage={isAdmin}
+                  canManage={canManage}
                 />
               ))}
             </tbody>
