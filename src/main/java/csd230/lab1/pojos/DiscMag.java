@@ -8,7 +8,7 @@ public class DiscMag extends Magazine {
     public DiscMag() {
     }
 
-    public DiscMag(boolean hasDisc, int orderQty, Date currentIssue, String title, double price, int copies) {
+    public DiscMag(boolean hasDisc, int orderQty, Date currentIssue, String title, Double price, int copies) {
         super(orderQty, currentIssue, title, price, copies);
         this.hasDisc = hasDisc;
     }

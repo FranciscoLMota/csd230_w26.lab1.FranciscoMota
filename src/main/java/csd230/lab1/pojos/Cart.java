@@ -39,7 +39,7 @@ public class Cart {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         return Objects.hashCode(getItems());
     }
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="min-h-screen bg-zinc-950 text-zinc-100">
+
+<main class="flex min-h-screen items-center justify-center px-6">
+
+    <div class="w-full max-w-md">
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold tracking-tight">
+                Create an Account
+            </h1>
+            <p class="mt-1 text-sm text-zinc-400">
+                Enter your information to get started.
+            </p>
+        </div>
+
+        <form th:action="@{/register}"
+              th:object="${user}"
+              method="post"
+              class="border border-zinc-800 bg-zinc-900 p-6">
+
+            <div class="mb-5">
+                <label for="username"
+                       class="mb-2 block text-sm font-medium text-zinc-300">
+                    Username
+                </label>
+
+                <input type="text"
+                       id="username"
+                       th:field="*{username}"
+                       autocomplete="username"
+                       autofocus
+                       required
+                       class="w-full border border-zinc-700 bg-zinc-950 px-3 py-2
+                              text-zinc-100 outline-none transition
+                              focus:border-indigo-500" />
+            </div>
+
+            <div class="mb-6">
+                <label for="password"
+                       class="mb-2 block text-sm font-medium text-zinc-300">
+                    Password
+                </label>
+
+                <input type="password"
+                       id="password"
+                       th:field="*{password}"
+                       autocomplete="new-password"
+                       required
+                       class="w-full border border-zinc-700 bg-zinc-950 px-3 py-2
+                              text-zinc-100 outline-none transition
+                              focus:border-indigo-500" />
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-indigo-600 px-4 py-2 text-sm font-semibold
+                           text-white transition hover:bg-indigo-500">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="mt-6 text-center text-sm text-zinc-400">
+            Already have an account?
+
+            <a th:href="@{/login}"
+               class="font-medium text-indigo-400 transition
+                      hover:text-indigo-300 hover:underline">
+                Sign In
+            </a>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

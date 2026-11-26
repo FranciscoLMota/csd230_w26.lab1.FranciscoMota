@@ -1,0 +1,59 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Magazine Details</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="min-h-screen bg-zinc-950 text-zinc-100">
+    <header th:replace="~{fragments/header :: catalogHeader}"></header>
+    <main class="mx-auto max-w-3xl p-6 py-12">
+      <div class="mb-8 flex justify-between">
+        <h1 class="text-3xl font-bold">Magazine Details</h1>
+        <a
+          th:href="@{/magazines}"
+          class="border border-zinc-700 px-3 py-1.5 text-sm"
+        >
+          &lt; Back
+        </a>
+      </div>
+      <div
+        th:if="${magazine}"
+        class="divide-y divide-zinc-800 border border-zinc-800 bg-zinc-900"
+      >
+        <div class="grid grid-cols-3 p-4">
+          <b>ID</b>
+          <span class="col-span-2" th:text="${magazine.id}"></span>
+        </div>
+        <div class="grid grid-cols-3 p-4">
+          <b>Title</b>
+          <span class="col-span-2" th:text="${magazine.title}"></span>
+        </div>
+        <div class="grid grid-cols-3 p-4">
+          <b>Price</b>
+          <span class="col-span-2" th:text="${magazine.price}"></span>
+        </div>
+        <div class="grid grid-cols-3 p-4">
+          <b>Copies</b>
+          <span class="col-span-2" th:text="${magazine.copies}"></span>
+        </div>
+        <div class="grid grid-cols-3 p-4">
+          <b>Order Quantity</b>
+          <span class="col-span-2" th:text="${magazine.orderQty}"></span>
+        </div>
+        <div class="grid grid-cols-3 p-4">
+          <b>Current Issue</b>
+          <span
+            class="col-span-2"
+            th:text="${#temporals.format(magazine.currentIssue, 'yyyy-MM-dd HH:mm')}"
+          ></span>
+        </div>
+      </div>
+      <p
+        th:unless="${magazine}"
+        class="border border-zinc-800 p-6 text-zinc-400"
+      >
+        No magazine found.
+      </p>
+    </main>
+  </body>
+</html>

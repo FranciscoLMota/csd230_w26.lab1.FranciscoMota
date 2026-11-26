@@ -1,0 +1,94 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <title>Magazine List</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="min-h-screen bg-zinc-950 text-zinc-100">
+    <header th:replace="~{fragments/header :: catalogHeader}"></header>
+    <main class="mx-auto max-w-6xl p-6">
+      <div class="mb-8 flex items-end justify-between">
+        <div>
+          <h1 class="text-3xl font-bold">Magazines</h1>
+          <p class="mt-1 text-sm text-zinc-400">
+            Manage the magazine collection.
+          </p>
+        </div>
+        <div class="flex gap-3">
+          <a
+            th:href="@{/cart}"
+            class="border border-zinc-700 px-4 py-2 text-sm"
+          >
+            Cart
+          </a>
+          <a
+            sec:authorize="hasRole('ADMIN')"
+            th:href="@{/magazines/add}"
+            class="bg-indigo-600 px-4 py-2 text-sm font-semibold"
+          >
+            + Add Magazine
+          </a>
+        </div>
+      </div>
+      <div class="overflow-hidden border border-zinc-800 bg-zinc-900">
+        <table class="w-full text-left">
+          <thead class="border-b border-zinc-800 text-sm text-zinc-400">
+            <tr>
+              <th class="p-4">Title</th>
+              <th class="p-4">Price</th>
+              <th class="p-4">Copies</th>
+              <th class="p-4">Order Qty</th>
+              <th class="p-4">Current Issue</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-800">
+            <tr th:each="magazine : ${magazines}" class="hover:bg-zinc-800/50">
+              <td class="p-4" th:text="${magazine.title}"></td>
+              <td class="p-4" th:text="${magazine.price}"></td>
+              <td class="p-4" th:text="${magazine.copies}"></td>
+              <td class="p-4" th:text="${magazine.orderQty}"></td>
+              <td
+                class="p-4"
+                th:text="${#temporals.format(magazine.currentIssue, 'yyyy-MM-dd')}"
+              ></td>
+              <td class="p-4">
+                <div class="flex justify-end gap-2">
+                  <a
+                    th:href="@{/magazines/{id}(id=${magazine.id})}"
+                    class="border border-zinc-700 px-3 py-1.5 text-sm"
+                  >
+                    Details
+                  </a>
+                  <span sec:authorize="hasRole('ADMIN')" class="flex gap-2">
+                    <a
+                      th:href="@{/magazines/edit/{id}(id=${magazine.id})}"
+                      class="border border-indigo-500/50 px-3 py-1.5 text-sm text-indigo-400"
+                    >
+                      Edit
+                    </a>
+                    <a
+                      th:href="@{/magazines/delete/{id}(id=${magazine.id})}"
+                      class="border border-red-500/40 px-3 py-1.5 text-sm text-red-400"
+                    >
+                      Delete
+                    </a>
+                  </span>
+                  <a
+                    th:href="@{/cart/add/{id}(id=${magazine.id})}"
+                    class="bg-indigo-600 px-3 py-1.5 text-sm"
+                  >
+                    Add to Cart
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

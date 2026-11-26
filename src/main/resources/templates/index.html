@@ -1,0 +1,55 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <title>Product Catalog</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="min-h-screen bg-zinc-950 text-zinc-100">
+    <header th:replace="~{fragments/header :: catalogHeader}"></header>
+    <main class="mx-auto max-w-6xl p-6 py-12">
+      <h1 class="text-4xl font-bold tracking-tight">Product Catalog</h1>
+      <p class="mt-2 text-zinc-400">Choose a product type to browse.</p>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2">
+        <a
+          th:href="@{/books}"
+          class="border border-zinc-800 bg-zinc-900 p-7 transition hover:border-indigo-500 hover:bg-zinc-800"
+        >
+          <h2 class="text-xl font-semibold">Books</h2>
+          <p class="mt-2 text-sm text-zinc-400">
+            Browse books by title and author.
+          </p>
+        </a>
+        <a
+          th:href="@{/magazines}"
+          class="border border-zinc-800 bg-zinc-900 p-7 transition hover:border-indigo-500 hover:bg-zinc-800"
+        >
+          <h2 class="text-xl font-semibold">Magazines</h2>
+          <p class="mt-2 text-sm text-zinc-400">
+            Browse current magazine issues.
+          </p>
+        </a>
+        <a
+          th:href="@{/disc-mags}"
+          class="border border-zinc-800 bg-zinc-900 p-7 transition hover:border-indigo-500 hover:bg-zinc-800"
+        >
+          <h2 class="text-xl font-semibold">Disc Magazines</h2>
+          <p class="mt-2 text-sm text-zinc-400">
+            Browse magazines with digital media.
+          </p>
+        </a>
+        <a
+          th:href="@{/tickets}"
+          class="border border-zinc-800 bg-zinc-900 p-7 transition hover:border-indigo-500 hover:bg-zinc-800"
+        >
+          <h2 class="text-xl font-semibold">Tickets</h2>
+          <p class="mt-2 text-sm text-zinc-400">
+            Browse available event tickets.
+          </p>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

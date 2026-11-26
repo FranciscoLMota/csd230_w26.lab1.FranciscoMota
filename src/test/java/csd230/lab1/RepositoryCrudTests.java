@@ -1,9 +1,11 @@
 package csd230.lab1;
 
+import csd230.lab1.entities.AlbumEntity;
 import csd230.lab1.entities.BookEntity;
 import csd230.lab1.entities.CartEntity;
 import csd230.lab1.entities.TicketEntity;
-import csd230.lab1.repositories.BookRepository;
+import csd230.lab1.repositories.AlbumEntityRepository;
+import csd230.lab1.repositories.BookEntityRepository;
 import csd230.lab1.repositories.CartEntityRepository;
 import csd230.lab1.repositories.TicketRepository;
 import org.junit.jupiter.api.Test;
@@ -18,9 +20,33 @@ import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = NONE)
 class RepositoryCrudTests {
 
-    @Autowired private BookRepository bookRepository;
+    @Autowired private AlbumEntityRepository albumEntityRepository;
+    @Autowired private BookEntityRepository bookEntityRepository;
     @Autowired private CartEntityRepository cartEntityRepository;
     @Autowired private TicketRepository ticketRepository;
+
+    @Test
+    void albumRepositorySupportsCrud() {
+        AlbumEntity album = albumEntityRepository.saveAndFlush(
+                new AlbumEntity("Kind of Blue", 24.99, 5, "Miles Davis",
+                        "Jazz", "Columbia Records", 1959));
+        Long albumId = album.getId();
+
+        assertThat(albumId).isNotNull();
+        assertThat(albumEntityRepository.findById(albumId)).contains(album);
+
+        album.setCopies(8);
+        album.setPrice(21.99);
+        albumEntityRepository.saveAndFlush(album);
+        assertThat(albumEntityRepository.findById(albumId)).get().satisfies(savedAlbum -> {
+            assertThat(savedAlbum.getCopies()).isEqualTo(8);
+            assertThat(savedAlbum.getPrice()).isEqualTo(21.99);
+        });
+
+        albumEntityRepository.deleteById(albumId);
+        albumEntityRepository.flush();
+        assertThat(albumEntityRepository.existsById(albumId)).isFalse();
+    }
 
     @Test
     void ticketRepositorySupportsCrud() {
@@ -43,24 +69,24 @@ class RepositoryCrudTests {
 
     @Test
     void bookRepositorySupportsCrud() {
-        BookEntity book = bookRepository.saveAndFlush(
+        BookEntity book = bookEntityRepository.saveAndFlush(
                 new BookEntity("Mordenkainen Presents: Monsters of the Multiverse",
                         59.99, 3, "Wizards of the Coast", "9780786967872"));
         Long bookId = book.getId();
 
-        assertThat(bookRepository.findById(bookId)).contains(book);
+        assertThat(bookEntityRepository.findById(bookId)).contains(book);
 
         book.setCopies(7);
         book.setPrice(34.99);
-        bookRepository.saveAndFlush(book);
-        assertThat(bookRepository.findById(bookId)).get().satisfies(savedBook -> {
+        bookEntityRepository.saveAndFlush(book);
+        assertThat(bookEntityRepository.findById(bookId)).get().satisfies(savedBook -> {
             assertThat(savedBook.getCopies()).isEqualTo(7);
             assertThat(savedBook.getPrice()).isEqualTo(34.99);
         });
 
-        bookRepository.deleteById(bookId);
-        bookRepository.flush();
-        assertThat(bookRepository.existsById(bookId)).isFalse();
+        bookEntityRepository.deleteById(bookId);
+        bookEntityRepository.flush();
+        assertThat(bookEntityRepository.existsById(bookId)).isFalse();
     }
 
     @Test

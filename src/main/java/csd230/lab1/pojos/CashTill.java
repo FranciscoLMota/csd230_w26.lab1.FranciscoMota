@@ -1,7 +1,7 @@
 package csd230.lab1.pojos;
 
 public class CashTill {
-    private double runningTotal;
+    private Double runningTotal;
 
     public CashTill() {
         this.runningTotal = 0.0;
@@ -17,7 +17,7 @@ public class CashTill {
         System.out.println("Added $" + item.getPrice() + " to till.");
     }
 
-    public double getRunningTotal() {
+    public Double getRunningTotal() {
         return runningTotal;
     }
 }

@@ -13,7 +13,7 @@ public class Book extends Publication {
         this.author = author;
     }
 
-    public Book(String author, String title, double price, int copies) {
+    public Book(String author, String title, Double price, int copies) {
         super(title, price, copies);
         this.author = author;
     }
@@ -70,7 +70,7 @@ public class Book extends Publication {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         return Objects.hash(super.hashCode(), author);
     }
 }
